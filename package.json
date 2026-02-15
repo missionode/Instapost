@@ -1,0 +1,15 @@
+{
+  "name": "instapost",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "jest": {
+    "testEnvironment": "jsdom"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "Instapost - AI Prompt Generator for Luxury Instagram Posters"
+}
