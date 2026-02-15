@@ -51,17 +51,26 @@ describe('index.html form elements', () => {
     expect(document.querySelector('[name="design_type"]')).toBeTruthy();
   });
 
+  test('should have a style description area', () => {
+    expect(document.getElementById('style-description')).toBeTruthy();
+  });
+
   test('should have a dress_reference input', () => {
     expect(document.querySelector('[name="dress_reference"]')).toBeTruthy();
   });
 
-  test('should have content fields: hook, brand, event_offer, location_details, contact_details, social_handles', () => {
+  test('should have content fields: hook, brand, event_offer, location_details, social_handles', () => {
     expect(document.querySelector('[name="hook"]')).toBeTruthy();
     expect(document.querySelector('[name="brand"]')).toBeTruthy();
     expect(document.querySelector('[name="event_offer"]')).toBeTruthy();
     expect(document.querySelector('[name="location_details"]')).toBeTruthy();
-    expect(document.querySelector('[name="contact_details"]')).toBeTruthy();
     expect(document.querySelector('[name="social_handles"]')).toBeTruthy();
+  });
+
+  test('should have separate contact fields: phone, whatsapp, email', () => {
+    expect(document.querySelector('[name="phone"]')).toBeTruthy();
+    expect(document.querySelector('[name="whatsapp"]')).toBeTruthy();
+    expect(document.querySelector('[name="email"]')).toBeTruthy();
   });
 
   test('should have a "Generate Prompt" button', () => {

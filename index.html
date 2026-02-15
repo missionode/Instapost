@@ -6,6 +6,7 @@
     <title>Instapost</title>
     <!-- Bootstrap 5 CSS CDN -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link href="style.css" rel="stylesheet">
 </head>
 <body>
@@ -19,15 +20,20 @@
             <form id="instapost-form" class="row g-3">
                 <div class="col-md-6">
                     <label for="design_type" class="form-label">Design Type</label>
-                    <select id="design_type" name="design_type" class="form-select">
+                    <select id="design_type" name="design_type" class="form-select" required>
                         <option value="luxury instagram poster" selected>Luxury Instagram Poster</option>
                         <option value="fashion editorial">Fashion Editorial</option>
                         <option value="product launch">Product Launch</option>
                     </select>
+                    <div class="mt-2 small text-muted" id="style-description">
+                        <strong>Luxury Instagram Poster:</strong> Cinematic, premium, warm commercial with South Asian luxury focus.<br>
+                        <strong>Fashion Editorial:</strong> High-end, artistic, and minimalist focus on silhouette and mood.<br>
+                        <strong>Product Launch:</strong> Bold, high-energy, and clear focus on product features and conversion.
+                    </div>
                 </div>
                 <div class="col-md-6">
                     <label for="dress_reference" class="form-label">Dress Reference (Image Link/File)</label>
-                    <input type="text" id="dress_reference" name="dress_reference" class="form-control" placeholder="URL or filename">
+                    <input type="text" id="dress_reference" name="dress_reference" class="form-control" placeholder="URL or filename" required>
                 </div>
 
                 <div class="col-md-12">
@@ -37,27 +43,44 @@
 
                 <div class="col-md-6">
                     <label for="brand" class="form-label">Brand Name</label>
-                    <input type="text" id="brand" name="brand" class="form-control" placeholder="e.g. Javitri">
+                    <input type="text" id="brand" name="brand" class="form-control" placeholder="e.g. Javitri" required>
                 </div>
                 <div class="col-md-6">
                     <label for="hook" class="form-label">Primary Hook (Attention Headline)</label>
-                    <input type="text" id="hook" name="hook" class="form-control" placeholder="e.g. PRIMARY ATTENTION HEADLINE">
+                    <input type="text" id="hook" name="hook" class="form-control" placeholder="e.g. PRIMARY ATTENTION HEADLINE" required>
                 </div>
                 <div class="col-md-12">
                     <label for="event_offer" class="form-label">Event/Offer Details</label>
-                    <textarea id="event_offer" name="event_offer" class="form-control" rows="2" placeholder="PROMOTIONAL OFFER OR ANNOUNCEMENT"></textarea>
+                    <textarea id="event_offer" name="event_offer" class="form-control" rows="2" placeholder="PROMOTIONAL OFFER OR ANNOUNCEMENT" required></textarea>
+                </div>
+                <div class="col-md-4">
+                    <label for="phone" class="form-label">Phone Number</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-telephone"></i></span>
+                        <input type="text" id="phone" name="phone" class="form-control" placeholder="Phone">
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <label for="whatsapp" class="form-label">WhatsApp</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-whatsapp"></i></span>
+                        <input type="text" id="whatsapp" name="whatsapp" class="form-control" placeholder="WhatsApp">
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <label for="email" class="form-label">Email</label>
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                        <input type="email" id="email" name="email" class="form-control" placeholder="Email">
+                    </div>
                 </div>
                 <div class="col-md-6">
                     <label for="location_details" class="form-label">Location Details</label>
-                    <input type="text" id="location_details" name="location_details" class="form-control" placeholder="ADDRESS, DATE, TIME">
+                    <input type="text" id="location_details" name="location_details" class="form-control" placeholder="ADDRESS, DATE, TIME" required>
                 </div>
                 <div class="col-md-6">
-                    <label for="contact_details" class="form-label">Contact Details</label>
-                    <input type="text" id="contact_details" name="contact_details" class="form-control" placeholder="PHONE, WHATSAPP, EMAIL">
-                </div>
-                <div class="col-md-12">
                     <label for="social_handles" class="form-label">Social Handles</label>
-                    <input type="text" id="social_handles" name="social_handles" class="form-control" placeholder="@brandhandle">
+                    <input type="text" id="social_handles" name="social_handles" class="form-control" placeholder="@brandhandle" required>
                 </div>
 
                 <div class="col-12 mt-4 text-center">
@@ -88,5 +111,6 @@
     </div>
     <!-- Bootstrap 5 JS Bundle CDN -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <script src="main.js"></script>
 </body>
 </html>
