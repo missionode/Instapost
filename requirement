@@ -1,0 +1,91 @@
+Prompt to  make it dynamic
+{
+  "design_type": "luxury instagram poster",
+  "style": {
+    "aesthetic": "cinematic, premium, warm commercial",
+    "mood": "celebratory, elegant, inviting",
+    "color_palette": {
+      "primary": "deep rich red",
+      "secondary": "warm gold accents",
+      "background": "soft warm gradient with subtle haze",
+      "lighting": "warm cinematic glow",
+      "contrast_standard": "WCAG AAA minimum 7:1 for all readable text"
+    },
+    "composition": {
+      "layout": "vertical instagram poster",
+      "structure": "top hook area, hero model focus center, bottom information block",
+      "depth": "multi-layered with foreground, midground, and background separation",
+      "focus": "strong central luxury focal point with clear text safe zones",
+      "safe_margins": "generous padding to protect readability on mobile"
+    },
+    "visual_elements": {
+      "hero_element": "flowing luxury fabric curtain reveal effect",
+      "background_style": "soft atmospheric city silhouette or abstract depth backdrop",
+      "midground": "premium storefront or luxury environment",
+      "foreground": "subtle crowd or ambient silhouettes (low distraction)",
+      "decor_accents": "minimal gold ribbon or celebratory accents"
+    },
+    "model_direction": {
+      "appearance": "South Asian Indian celebrity-like professional model",
+      "pose_style": "confident luxury poses, elegant posture, fashion editorial feel",
+      "expression": "warm, premium, approachable confidence",
+      "wardrobe_source": "apply uploaded dress/material reference to the model outfit",
+      "lighting_on_model": "soft cinematic key light with gentle rim highlight",
+      "focus_priority": "model supports design, does not overpower text readability"
+    },
+    "typography_style": {
+      "hook": "bold elegant serif, highest visual priority",
+      "brand": "clean premium wordmark style",
+      "details": "modern highly readable sans-serif",
+      "hierarchy": "hook > brand > offer > event details > contact > social",
+      "alignment": "centered and visually balanced",
+      "readability_rules": {
+        "contrast_ratio": "minimum 7:1 (WCAG AAA)",
+        "avoid_busy_backgrounds": true,
+        "use_text_backplates_if_needed": true,
+        "mobile_first_legibility": true
+      }
+    },
+    "finish": {
+      "quality": "photorealistic",
+      "sharpness": "high clarity with shallow depth of field",
+      "overall_feel": "premium retail launch advertisement optimized for instagram"
+    }
+  },
+  "inputs": {
+    "dress_reference": "image file or public file link for outfit/material",
+    "logo_optional": "brand logo file if available"
+  },
+  "content_placeholders": {
+    "hook": "PRIMARY ATTENTION HEADLINE",
+    "brand": "Javitri",
+    "event_offer": "PROMOTIONAL OFFER OR ANNOUNCEMENT",
+    "location_datails": "ADDRESS, DATE, TIME DETAILS",
+    "contact_details": "PHONE, WHATSAPP OR EMAIL",
+    "social_handles": "@brandhandle and social icons"
+  }
+}
+
+Create a form that will generate the above prompt
+
+the form input needs to be are given below 
+{
+  "design_type": "luxury instagram poster",
+  "inputs": {
+    "dress_reference": ""
+  },
+  "content": {
+    "hook": "", text
+    "brand": "text",
+    "event_offer": "text",
+    "location_details": "Place",
+    "contact_details": "number",
+    "social_handles": "text"
+  },
+}
+
+in the above hook, brand , location_details, location_details, social handles provide an option in the localstorage to remember as they are semi static  
+
+also in the bottom provide a download and upload the database 
+
+

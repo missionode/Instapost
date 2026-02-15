@@ -9,7 +9,9 @@ function saveBrandData(data) {
         whatsapp: data.whatsapp,
         email: data.email,
         design_type: data.design_type,
-        creative_type: data.creative_type
+        creative_type: data.creative_type,
+        logo_dark: data.logo_dark,
+        logo_light: data.logo_light
     };
     if (typeof localStorage !== 'undefined') {
         localStorage.setItem(brandDataKey, JSON.stringify(semiStaticData));
