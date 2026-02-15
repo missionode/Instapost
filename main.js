@@ -44,8 +44,12 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     function generatePrompt(data) {
-        // Placeholder for the actual prompt generation logic (to be implemented in Phase 2)
-        const placeholderPrompt = `DESIGN TYPE: ${data.design_type}
+        // Use the real prompt generation engine from engine.js
+        if (typeof generatePromptText === 'function') {
+            outputArea.value = generatePromptText(data);
+        } else {
+            // Fallback placeholder
+            const placeholderPrompt = `DESIGN TYPE: ${data.design_type}
 BRAND: ${data.brand}
 HOOK: ${data.hook}
 OFFER: ${data.event_offer}
@@ -55,8 +59,8 @@ WHATSAPP: ${data.whatsapp || 'N/A'}
 EMAIL: ${data.email || 'N/A'}
 SOCIAL: ${data.social_handles}
 
-[Full prompt generation engine is coming in Phase 2]`;
-        
-        outputArea.value = placeholderPrompt;
+[Engine not loaded correctly]`;
+            outputArea.value = placeholderPrompt;
+        }
     }
 });
