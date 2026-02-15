@@ -8,6 +8,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const aiContentToggle = document.getElementById('ai_content_mode');
     const manualContentFields = document.getElementById('manual_content_fields');
     const aiContentNote = document.getElementById('ai_content_note');
+    const logoToggle = document.getElementById('enable_logo');
+    const logoContainer = document.getElementById('logo_input_container');
     const downloadBtn = document.getElementById('download-db-btn');
     const uploadBtn = document.getElementById('upload-db-btn');
 
@@ -24,6 +26,15 @@ document.addEventListener('DOMContentLoaded', () => {
             festiveContainer.classList.remove('d-none');
         } else {
             festiveContainer.classList.add('d-none');
+        }
+    });
+
+    // Toggle Logo Input
+    logoToggle.addEventListener('change', () => {
+        if (logoToggle.checked) {
+            logoContainer.classList.remove('d-none');
+        } else {
+            logoContainer.classList.add('d-none');
         }
     });
 
@@ -80,6 +91,10 @@ document.addEventListener('DOMContentLoaded', () => {
                                 radio.checked = true;
                             }
                         }
+                    } else if (field.type === 'checkbox') {
+                        field.checked = savedData[key] === 'on' || savedData[key] === true;
+                        // Trigger change events to update UI visibility
+                        field.dispatchEvent(new Event('change'));
                     } else {
                         // Handle text inputs and select fields
                         field.value = savedData[key];

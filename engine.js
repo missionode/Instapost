@@ -31,7 +31,7 @@ const styleTemplates = {
             hook: "bold elegant serif, highest visual priority",
             brand: "clean premium wordmark style",
             details: "modern highly readable sans-serif",
-            hierarchy: "hook > brand > offer > event details > contact > instagram",
+            hierarchy: "logo > hook > brand > offer > event details > contact > instagram",
             alignment: "Centered and visually balanced alignment for all text elements",
             readability: "minimum 7:1 contrast ratio (WCAG AAA), mobile-first legibility, use text backplates if needed"
         }
@@ -68,7 +68,7 @@ const styleTemplates = {
             hook: "ornate display serif with ethnic flair",
             brand: "classic calligraphic style wordmark",
             details: "clean legible sans-serif",
-            hierarchy: "hook > brand > details > contact > instagram",
+            hierarchy: "logo > hook > brand > details > contact > instagram",
             alignment: "Perfectly centered with decorative dividers",
             readability: "high contrast against textured backgrounds"
         }
@@ -105,7 +105,7 @@ const styleTemplates = {
             hook: "stately high-contrast serif (didone style)",
             brand: "embossed-look gold wordmark",
             details: "refined copperplate gothic",
-            hierarchy: "brand > hook > event > contact > instagram",
+            hierarchy: "logo > brand > hook > event > contact > instagram",
             alignment: "Centered and formal with absolute symmetry",
             readability: "luxurious contrast and spacing"
         }
@@ -142,7 +142,7 @@ const styleTemplates = {
             hook: "modern sophisticated sans-serif with wide tracking",
             brand: "timeless high-fashion serif wordmark",
             details: "lightweight legible grotesque",
-            hierarchy: "brand > hook > details > contact > instagram",
+            hierarchy: "logo > brand > hook > details > contact > instagram",
             alignment: "Balanced, centered, and airy alignment",
             readability: "perfect clarity and elegant spacing"
         }
@@ -179,7 +179,7 @@ const styleTemplates = {
             hook: "ultra-thin sophisticated serif",
             brand: "minimalist signature wordmark",
             details: "compact vertical text alignment",
-            hierarchy: "brand > hook > event > contact > instagram",
+            hierarchy: "logo > brand > hook > event > contact > instagram",
             alignment: "Asymmetrical yet visually balanced alignment",
             readability: "high-contrast legibility, sharp focus on typography"
         }
@@ -216,7 +216,7 @@ const styleTemplates = {
             hook: "heavy impact sans-serif",
             brand: "bold logo-centric placement",
             details: "clear informational bullet points",
-            hierarchy: "offer > hook > brand > contact > instagram",
+            hierarchy: "logo > offer > hook > brand > contact > instagram",
             alignment: "Bold centered alignment for immediate impact",
             readability: "maximum contrast for rapid scanning, bold legibility"
         }
@@ -253,7 +253,7 @@ const styleTemplates = {
             hook: "distorted or bold slab-serif",
             brand: "streetwear wordmark with sticker-effect",
             details: "monospace tech-style fonts",
-            hierarchy: "hook > offer > instagram",
+            hierarchy: "logo > hook > offer > instagram",
             alignment: "Dynamic, off-kilter, or justified alignment",
             readability: "high-contrast neon legibility, bold visibility"
         }
@@ -290,7 +290,7 @@ const styleTemplates = {
             hook: "elegant minimalist sans-serif with wide tracking",
             brand: "subtle lowercase wordmark",
             details: "lightweight serif for secondary info",
-            hierarchy: "brand > hook > details > contact > instagram",
+            hierarchy: "logo > brand > hook > details > contact > instagram",
             alignment: "Centered or left-aligned with ample white space",
             readability: "soft contrast legibility, focus on breathing room"
         }
@@ -327,7 +327,7 @@ const styleTemplates = {
             hook: "match reference typographic style and weight",
             brand: "premium wordmark matching reference aesthetic",
             details: "clean legible sans-serif",
-            hierarchy: "replicate reference content hierarchy",
+            hierarchy: "logo > replicate reference content hierarchy",
             alignment: "Centered or matched to reference alignment",
             readability: "maintain high contrast while matching reference vibe"
         }
@@ -365,7 +365,14 @@ function generatePromptText(data) {
     if (data.email) contactIcons.push(`Email glyph: ${data.email}`);
     const contactStr = contactIcons.join(' | ') || "None provided";
 
-    const wardrobeSource = `MANDATORY: Use the exact dress and material from the original uploaded image reference provided ${data.dress_reference ? `(${data.dress_reference})` : ''}. DO NOT alter the style, color, texture, or design. Absolute 1:1 fidelity required. The model must wear the identical garment from the reference image without any modifications.`;
+    // Dress Reference Handling: Festive Mode skips manual reference, all others strict 1:1.
+    let wardrobeSource;
+    if (data.festive_mode === 'on' && data.festive_info) {
+        wardrobeSource = `PRIORITY: Apply authentic and opulent ${data.festive_info} festive attire to the model. Ensure the clothing perfectly matches the cultural and seasonal significance of the occasion. (Note: This mode prioritizes thematic consistency over manual reference).`;
+    } else {
+        const refText = data.dress_reference ? `(Reference: ${data.dress_reference})` : '';
+        wardrobeSource = `MANDATORY: Use the exact dress and material from the original uploaded image reference provided ${refText}. DO NOT alter the style, color, texture, or design. Absolute 1:1 fidelity required. The model must wear the identical garment from the reference image without any modifications.`;
+    }
 
     let festiveInstruction = "";
     if (data.festive_mode === 'on' && data.festive_info) {
@@ -381,8 +388,9 @@ function generatePromptText(data) {
 
     // Logo Logic
     let logoInstruction = "";
-    if (data.logo_light || data.logo_dark) {
+    if (data.enable_logo === 'on' && (data.logo_light || data.logo_dark)) {
         logoInstruction = `\n  "LOGO_INTEGRATION": {
+    "is_logo_mandatory": true,
     "light_version": "${data.logo_light || 'None provided'}",
     "dark_version": "${data.logo_dark || 'None provided'}",
     "usage_rule": "Select the version with maximum contrast against the generated background (Light for Dark/Rich, Dark for Light/Airy).",
@@ -400,7 +408,7 @@ function generatePromptText(data) {
         "constraints": "Width: 18-22% of total width | Max Height: 5% of total height"
       }
     },
-    "rendering_instruction": "Maintain absolute aspect ratio. Do not stretch or distort. Ensure clear negative space around the logo for visibility."
+    "rendering_instruction": "Maintain absolute aspect ratio. Do not stretch or distort. Ensure clear negative space around the logo for visibility. The logo MUST be visible and identifiable."
   },`;
     }
 
@@ -466,8 +474,9 @@ function generatePromptText(data) {
     }
   },
   "content_placeholders": {
+    "brand_logo": "${(data.logo_light || data.logo_dark) ? 'RENDER_PROVIDED_LOGO' : 'RENDER_BRAND_NAME_AS_TEXT'}",
     "hook": "${hookText}",
-    "brand": "${brandName}",
+    "brand_name": "${brandName}",
     "event_offer": "${offerText}",
     "location_details": "${data.location_details || 'Location'}",
     "contact_details": "${contactStr}",

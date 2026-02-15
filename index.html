@@ -78,23 +78,37 @@
                     <label for="brand" class="form-label">Brand Name</label>
                     <input type="text" id="brand" name="brand" class="form-control" placeholder="e.g. Brand Name" required>
                 </div>
-                <div class="col-md-6 d-flex align-items-end pb-2">
-                    <div class="form-check form-switch">
+                <div class="col-md-6 d-flex flex-column justify-content-end pb-2">
+                    <div class="form-check form-switch mb-2">
                         <input class="form-check-input" type="checkbox" id="ai_content_mode" name="ai_content_mode">
                         <label class="form-check-label fw-bold" for="ai_content_mode">
                             AI Content Mode
                             <span class="badge bg-warning text-dark ms-2" style="font-size: 0.7rem; font-weight: normal;">Experimental</span>
                         </label>
                     </div>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="enable_logo" name="enable_logo">
+                        <label class="form-check-label fw-bold" for="enable_logo">
+                            Enable Logo Integration
+                            <span class="badge bg-secondary text-white ms-2" style="font-size: 0.7rem; font-weight: normal;">Beta</span>
+                        </label>
+                    </div>
                 </div>
 
-                <div class="col-md-6">
-                    <label for="logo_light" class="form-label">Brand Logo (Light PNG for Dark BG)</label>
-                    <input type="text" id="logo_light" name="logo_light" class="form-control" placeholder="URL or filename of Light Logo">
-                </div>
-                <div class="col-md-6">
-                    <label for="logo_dark" class="form-label">Brand Logo (Dark PNG for Bright BG)</label>
-                    <input type="text" id="logo_dark" name="logo_dark" class="form-control" placeholder="URL or filename of Dark Logo">
+                <div id="logo_input_container" class="row g-3 p-0 m-0 d-none">
+                    <div class="col-md-6">
+                        <label for="logo_light" class="form-label">Brand Logo (Light PNG for Dark BG)</label>
+                        <input type="text" id="logo_light" name="logo_light" class="form-control" placeholder="URL or filename of Light Logo">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="logo_dark" class="form-label">Brand Logo (Dark PNG for Bright BG)</label>
+                        <input type="text" id="logo_dark" name="logo_dark" class="form-control" placeholder="URL or filename of Dark Logo">
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-text small text-muted">
+                            <i class="bi bi-info-circle"></i> Note: AI model performance with exact logo placement is currently being refined. This feature will be significantly improved in upcoming updates. If you face issues, please let us know.
+                        </div>
+                    </div>
                 </div>
 
                 <div id="manual_content_fields" class="row g-3 p-0 m-0">
@@ -110,7 +124,10 @@
                 
                 <div id="ai_content_note" class="col-md-12 d-none">
                     <div class="alert alert-info py-2 small">
-                        <i class="bi bi-magic"></i> <strong>AI Mode Active:</strong> The AI will automatically generate a high-conversion Hook and Offer based on your brand, design style, and festive information.
+                        <i class="bi bi-magic"></i> <strong>AI Mode Active:</strong> The AI will automatically generate a high-conversion Hook and Offer based on your brand and style.
+                        <div class="mt-1 fw-bold text-dark border-top pt-1">
+                            <i class="bi bi-info-circle"></i> Note: This mode maintains your exact "Replace Dress/Outfit Reference" for 1:1 fidelity.
+                        </div>
                     </div>
                 </div>
                 <div class="col-md-4">
@@ -136,7 +153,7 @@
                 </div>
                 <div class="col-md-6">
                     <label for="location_details" class="form-label">Location Details</label>
-                    <input type="text" id="location_details" name="location_details" class="form-control" placeholder="ADDRESS, DATE, TIME" required>
+                    <input type="text" id="location_details" name="location_details" class="form-control" placeholder="eg: Brandname, Location" required>
                 </div>
                 <div class="col-md-6">
                     <label for="social_handles" class="form-label">Instagram Handle</label>
