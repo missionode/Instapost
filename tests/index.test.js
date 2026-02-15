@@ -23,6 +23,10 @@ describe('index.html structure', () => {
     expect(html).toMatch(/https:\/\/cdn\.jsdelivr\.net\/npm\/bootstrap@5/);
   });
 
+  test('should link to style.css', () => {
+    expect(html).toMatch(/<link href="style.css" rel="stylesheet">/);
+  });
+
   test('should have a title tag with Instapost', () => {
     expect(html).toMatch(/<title>Instapost<\/title>/i);
   });
