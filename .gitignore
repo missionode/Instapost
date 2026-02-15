@@ -1,0 +1,19 @@
+# Dependencies
+node_modules/
+
+# Testing
+coverage/
+
+# OS specific files
+.DS_Store
+Thumbs.db
+
+# Environments
+.env
+.env.local
+
+# IDEs
+.idea/
+.vscode/
+*.swp
+*.swo
