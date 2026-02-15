@@ -3,9 +3,30 @@ document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('instapost-form');
     const outputArea = document.getElementById('prompt-output');
 
+    // Load saved brand data on initialization (functions from storage.js)
+    if (typeof loadBrandData === 'function') {
+        const savedData = loadBrandData();
+        if (savedData) {
+            Object.keys(savedData).forEach(key => {
+                const field = form.elements[key];
+                if (field) {
+                    field.value = savedData[key];
+                }
+            });
+        }
+    }
+
     generateBtn.addEventListener('click', () => {
         if (form.checkValidity()) {
-            generatePrompt();
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData.entries());
+            
+            // Save semi-static fields (function from storage.js)
+            if (typeof saveBrandData === 'function') {
+                saveBrandData(data);
+            }
+            
+            generatePrompt(data);
         } else {
             form.reportValidity();
         }
@@ -22,10 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    function generatePrompt() {
-        const formData = new FormData(form);
-        const data = Object.fromEntries(formData.entries());
-        
+    function generatePrompt(data) {
         // Placeholder for the actual prompt generation logic (to be implemented in Phase 2)
         const placeholderPrompt = `DESIGN TYPE: ${data.design_type}
 BRAND: ${data.brand}
