@@ -2,11 +2,11 @@
 
 This plan outlines the steps to build the core Instapost application.
 
-## Phase 1: Foundation & UI
+## Phase 1: Foundation & UI [checkpoint: cdaa00f]
 - [x] Task: Create basic HTML5 structure and link Bootstrap 5 CDN (59505b2)
 - [x] Task: Implement the dynamic form UI with all required fields (Design Type, Dress Ref, Content) (5232106)
 - [x] Task: Add styling for mobile-first responsiveness and professional look (9955eb8)
-- [ ] Task: Conductor - User Manual Verification 'Phase 1: Foundation & UI' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 1: Foundation & UI' (Protocol in workflow.md) (cdaa00f)
 
 ## Phase 2: Logic & Persistence
 - [ ] Task: Write tests for localStorage utility functions
