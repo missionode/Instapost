@@ -11,7 +11,7 @@ This plan outlines the steps to build the core Instapost application.
 ## Phase 2: Logic & Persistence
 - [x] Task: Write tests for localStorage utility functions (d89f974)
 - [x] Task: Implement localStorage persistence for semi-static fields (ecbae82)
-- [ ] Task: Write tests for the prompt generation engine
+- [x] Task: Write tests for the prompt generation engine (434ed2b)
 - [ ] Task: Implement the "Luxury South Asian" prompt generation logic
 - [ ] Task: Connect form inputs to the prompt generation engine and display output
 - [ ] Task: Conductor - User Manual Verification 'Phase 2: Logic & Persistence' (Protocol in workflow.md)
