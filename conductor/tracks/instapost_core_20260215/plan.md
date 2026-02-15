@@ -13,7 +13,7 @@ This plan outlines the steps to build the core Instapost application.
 - [x] Task: Implement localStorage persistence for semi-static fields (ecbae82)
 - [x] Task: Write tests for the prompt generation engine (434ed2b)
 - [x] Task: Implement the "Luxury South Asian" prompt generation logic (a55766f)
-- [ ] Task: Connect form inputs to the prompt generation engine and display output
+- [x] Task: Connect form inputs to the prompt generation engine and display output (30e2b37)
 - [ ] Task: Conductor - User Manual Verification 'Phase 2: Logic & Persistence' (Protocol in workflow.md)
 
 ## Phase 3: Data Management
