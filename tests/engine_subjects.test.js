@@ -11,8 +11,8 @@ describe('Multi-Subject Composition System', () => {
     test('should detect Group Mode when multiple categories are selected', () => {
         const groupData = {
             ...baseData,
-            subject_men: 'on',
-            subject_women: 'on'
+            festive_subject_men: 'on',
+            festive_subject_women: 'on'
         };
         const prompt = engine.generatePromptText(groupData);
         expect(prompt).toMatch(/"group_mode": true/i);
@@ -23,7 +23,7 @@ describe('Multi-Subject Composition System', () => {
         const multiUrlData = {
             ...baseData,
             dress_reference: 'https://example.com/dress1.jpg, https://example.com/dress2.jpg',
-            subject_women: 'on'
+            artisan_subject_women: 'on'
         };
         const prompt = engine.generatePromptText(multiUrlData);
         expect(prompt).toMatch(/"group_mode": true/i);
@@ -35,8 +35,8 @@ describe('Multi-Subject Composition System', () => {
             ...baseData,
             festive_mode: 'on',
             festive_info: 'Diwali',
-            subject_men: 'on',
-            subject_kids: 'on'
+            festive_subject_men: 'on',
+            festive_subject_kids: 'on'
         };
         const prompt = engine.generatePromptText(festiveGroupData);
         expect(prompt).toMatch(/Opulent Traditional Kurta\/Sherwani/i);
@@ -47,8 +47,8 @@ describe('Multi-Subject Composition System', () => {
         const multiArtisanData = {
             ...baseData,
             dress_reference: 'https://example.com/men.jpg, https://example.com/women.jpg',
-            subject_men: 'on',
-            subject_women: 'on'
+            artisan_subject_men: 'on',
+            artisan_subject_women: 'on'
         };
         const prompt = engine.generatePromptText(multiArtisanData);
         expect(prompt).toMatch(/https:\/\/example\.com\/men\.jpg/);

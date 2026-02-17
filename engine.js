@@ -27,8 +27,11 @@ function toSentenceCase(str) {
 }
 
 function isGroupMode(data) {
-    // Detect if multiple categories are selected
-    const categories = ['subject_men', 'subject_women', 'subject_kids'];
+    // Aggregate subjects from both mode-specific inputs
+    const categories = [
+        'festive_subject_men', 'festive_subject_women', 'festive_subject_kids',
+        'artisan_subject_men', 'artisan_subject_women', 'artisan_subject_kids'
+    ];
     const selectedCount = categories.filter(cat => data[cat] === 'on' || data[cat] === true).length;
     
     // Detect if multiple URLs are provided
@@ -112,11 +115,11 @@ function generatePromptText(data) {
     if (data.email) contactIcons.push(`Email glyph: ${data.email}`);
     const contactStr = contactIcons.join(' | ') || "";
 
-    // Subject mapping
+    // Subject mapping (Aggregate from both possible sets)
     const selectedSubjects = [];
-    if (data.subject_men === 'on' || data.subject_men === true) selectedSubjects.push("Men");
-    if (data.subject_women === 'on' || data.subject_women === true) selectedSubjects.push("Women");
-    if (data.subject_kids === 'on' || data.subject_kids === true) selectedSubjects.push("Kids");
+    if (data.festive_subject_men === 'on' || data.festive_subject_men === true || data.artisan_subject_men === 'on' || data.artisan_subject_men === true) selectedSubjects.push("Men");
+    if (data.festive_subject_women === 'on' || data.festive_subject_women === true || data.artisan_subject_women === 'on' || data.artisan_subject_women === true) selectedSubjects.push("Women");
+    if (data.festive_subject_kids === 'on' || data.festive_subject_kids === true || data.artisan_subject_kids === 'on' || data.artisan_subject_kids === true) selectedSubjects.push("Kids");
     
     const subjectList = selectedSubjects.length > 0 ? selectedSubjects.join(' and ') : "Professional South Asian model";
 

@@ -92,7 +92,27 @@
                             <div id="input_festive" class="anchor-input-group">
                                 <label for="festive_info" class="form-label fw-bold">Occasion Name</label>
                                 <input type="text" id="festive_info" name="festive_info" class="form-control form-control-lg border-0 bg-light rounded-3" placeholder="e.g. Diwali Celebration, Summer Sale 2026">
-                                <div class="form-text mt-2 text-primary">
+                                
+                                <!-- Festive Subject Selection -->
+                                <div class="mt-4 border-top pt-3">
+                                    <label class="form-label small fw-bold text-muted text-uppercase d-block mb-3">Festive Target Subject(s)</label>
+                                    <div class="d-flex flex-wrap gap-4">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="festive_subject_women" name="festive_subject_women" checked>
+                                            <label class="form-check-label fw-bold" for="festive_subject_women">Women</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="festive_subject_men" name="festive_subject_men">
+                                            <label class="form-check-label fw-bold" for="festive_subject_men">Men</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="festive_subject_kids" name="festive_subject_kids">
+                                            <label class="form-check-label fw-bold" for="festive_subject_kids">Kids</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-text mt-3 text-primary">
                                     <i class="bi bi-info-circle"></i> AI will prioritize cultural authenticity and seasonal decor.
                                 </div>
                                 <input type="checkbox" id="festive_mode" name="festive_mode" class="d-none">
@@ -102,7 +122,27 @@
                             <div id="input_artisan" class="anchor-input-group d-none">
                                 <label for="dress_reference" class="form-label fw-bold">Dress Reference URL(s)</label>
                                 <input type="text" id="dress_reference" name="dress_reference" class="form-control form-control-lg border-0 bg-light rounded-3" placeholder="Paste link(s) here. Separate multiple with commas.">
-                                <div class="form-text mt-2 text-success fw-bold">
+                                
+                                <!-- Artisan Subject Selection -->
+                                <div class="mt-4 border-top pt-3">
+                                    <label class="form-label small fw-bold text-muted text-uppercase d-block mb-3">Artisan Target Subject(s)</label>
+                                    <div class="d-flex flex-wrap gap-4">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="artisan_subject_women" name="artisan_subject_women">
+                                            <label class="form-check-label fw-bold" for="artisan_subject_women">Women</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="artisan_subject_men" name="artisan_subject_men">
+                                            <label class="form-check-label fw-bold" for="artisan_subject_men">Men</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="artisan_subject_kids" name="artisan_subject_kids">
+                                            <label class="form-check-label fw-bold" for="artisan_subject_kids">Kids</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-text mt-3 text-success fw-bold">
                                     <i class="bi bi-check-circle-fill"></i> Artisan Fidelity Active. Comma-separate for multiple models.
                                 </div>
                             </div>
@@ -110,26 +150,6 @@
                             <!-- AI Message -->
                             <div id="input_ai" class="anchor-input-group d-none text-center py-2">
                                 <p class="mb-0 text-muted italic">AI will automatically derive the visual style from your brand and marketing content below.</p>
-                            </div>
-
-                            <!-- Subject Selection (Shared for Festive/Artisan) -->
-                            <div id="subject_selection" class="mt-4 border-top pt-3">
-                                <label class="form-label small fw-bold text-muted text-uppercase d-block mb-3">Target Subject(s)</label>
-                                <div class="d-flex flex-wrap gap-4">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="subject_women" name="subject_women" checked>
-                                        <label class="form-check-label fw-bold" for="subject_women">Women</label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="subject_men" name="subject_men">
-                                        <label class="form-check-label fw-bold" for="subject_men">Men</label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="subject_kids" name="subject_kids">
-                                        <label class="form-check-label fw-bold" for="subject_kids">Kids</label>
-                                    </div>
-                                </div>
-                                <div class="form-text mt-2 small">Selecting multiple subjects will automatically enable <strong>Group Mode</strong> layout.</div>
                             </div>
                         </div>
                     </div>
