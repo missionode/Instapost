@@ -89,4 +89,10 @@ describe('index.html form elements', () => {
     expect(document.getElementById('input_artisan')).toBeTruthy();
     expect(document.getElementById('input_ai')).toBeTruthy();
   });
+
+  test('should have radio buttons for creative type selection', () => {
+    expect(document.getElementById('type_post')).toBeTruthy();
+    expect(document.getElementById('type_portrait')).toBeTruthy();
+    expect(document.getElementById('type_reel')).toBeTruthy();
+  });
 });

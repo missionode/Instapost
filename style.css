@@ -86,6 +86,41 @@ label {
     border-top-right-radius: 0 !important;
 }
 
+.rounded-4 { border-radius: 0.75rem !important; }
+
+/* Radio Button Highlights */
+.btn-check:checked + .btn-outline-primary {
+    background-color: var(--primary-blue) !important;
+    border-color: transparent !important;
+    color: white !important;
+}
+
+.btn-check:checked + .btn-outline-secondary {
+    background-color: #6c757d !important;
+    color: white !important;
+}
+
+/* Format Tiles */
+.format-tile {
+    min-height: 80px;
+    background-color: #fff;
+    border: 2px solid var(--border-color) !important;
+    color: var(--text-main);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.format-tile:hover {
+    border-color: var(--primary-blue) !important;
+    background-color: rgba(13, 110, 253, 0.02);
+}
+
+.btn-check:checked + .format-tile {
+    background-color: var(--primary-blue) !important;
+    border-color: var(--primary-blue) !important;
+    color: #fff !important;
+    box-shadow: 0 4px 15px rgba(13, 110, 253, 0.3) !important;
+}
+
 /* Prompt Output Area */
 #prompt-output {
     background-color: #1a1d20 !important;
@@ -104,5 +139,8 @@ label {
     }
     .display-4 {
         font-size: 2.25rem;
+    }
+    .btn-lg {
+        width: 100%;
     }
 }
