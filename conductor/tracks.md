@@ -30,4 +30,4 @@ This file tracks all major tracks for the project. Each track has its own detail
 ---
 
 - [x] **Track: Implement modern Flat Design and Mobile UX polish**
-*Link: [./tracks/flat_design_mobile_ux_20260217/](./flat_design_mobile_ux_20260217/)*
+*Link: [./archive/flat_design_mobile_ux_20260217/](./archive/flat_design_mobile_ux_20260217/)*
