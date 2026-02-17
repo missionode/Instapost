@@ -26,22 +26,31 @@ function toSentenceCase(str) {
     return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
 }
 
-function deriveGridStrategy(data) {
-    // Macro-Grid: 3x3 photographic grid (Rule of Thirds)
-    // Asymmetrical Logic: Utilize 2 columns, leave 1 empty (Negative Space)
+function isGroupMode(data) {
+    // Detect if multiple categories are selected
+    const categories = ['subject_men', 'subject_women', 'subject_kids', 'subject_unisex'];
+    const selectedCount = categories.filter(cat => data[cat] === 'on' || data[cat] === true).length;
     
-    // Default: Clear Column 3 (Right) to protect Hero focus
-    let negativeSpaceAnchor = 3;
-    let activeColumns = [1, 2];
+    // Detect if multiple URLs are provided
+    const hasMultipleUrls = data.dress_reference && data.dress_reference.includes(',');
+    
+    return selectedCount > 1 || hasMultipleUrls;
+}
 
-    // If the content is exceptionally sparse, we could shift to a 1-column anchor, 
-    // but the 2-of-3 rule is our primary premium aesthetic.
+function deriveGridStrategy(data) {
+    const groupMode = isGroupMode(data);
     
+    let negativeSpaceAnchor = groupMode ? "None (Full Width Group)" : 3;
+    let activeColumns = groupMode ? [1, 2, 3] : [1, 2];
+
     return {
         spatial_rule: "Rule of Thirds / Asymmetrical 2-of-3",
+        group_mode: groupMode,
         active_columns: activeColumns,
         negative_space_anchor: negativeSpaceAnchor,
-        grid_logic: "Content utilizes exactly 2 columns; 1 column remains mandatory empty negative space to ensure high-fashion editorial breathing room.",
+        grid_logic: groupMode 
+            ? "Full-width Hero block utilized to accommodate multiple subjects in a balanced group composition."
+            : "Content utilizes exactly 2 columns; 1 column remains mandatory empty negative space to ensure high-fashion editorial breathing room.",
         micro_grid: {
             footer: {
                 columns: 3,
@@ -103,7 +112,16 @@ function generatePromptText(data) {
     if (data.email) contactIcons.push(`Email glyph: ${data.email}`);
     const contactStr = contactIcons.join(' | ') || "";
 
-    // Wardrobe Lock Strategy Integration (V3)
+    // Subject mapping
+    const selectedSubjects = [];
+    if (data.subject_men === 'on' || data.subject_men === true) selectedSubjects.push("Men");
+    if (data.subject_women === 'on' || data.subject_women === true) selectedSubjects.push("Women");
+    if (data.subject_kids === 'on' || data.subject_kids === true) selectedSubjects.push("Kids");
+    if (data.subject_unisex === 'on' || data.subject_unisex === true) selectedSubjects.push("Unisex");
+    
+    const subjectList = selectedSubjects.length > 0 ? selectedSubjects.join(' and ') : "Professional South Asian model";
+
+    // Wardrobe Lock Strategy Integration
     let wardrobeLockBlock = "";
     let globalPriorityBlock = "";
     let antiDriftRules = "";
@@ -112,7 +130,14 @@ function generatePromptText(data) {
     // Dress Reference Handling
     let wardrobeSource;
     if (data.festive_mode === 'on' && data.festive_info) {
-        wardrobeSource = `PRIORITY: Apply authentic and opulent ${data.festive_info} festive attire to the model. Ensure the clothing perfectly matches the cultural and seasonal significance of the occasion. (Note: This mode prioritizes thematic consistency over manual reference).`;
+        const attireDirectives = [];
+        if (selectedSubjects.includes("Men")) attireDirectives.push("Opulent Traditional Kurta/Sherwani");
+        if (selectedSubjects.includes("Women")) attireDirectives.push("High-Fashion Saree/Lehenga");
+        if (selectedSubjects.includes("Kids")) attireDirectives.push("Coordinated Festive Mini-wear");
+        
+        const attireText = attireDirectives.length > 0 ? attireDirectives.join(', ') : "Authentic Festive Attire";
+        
+        wardrobeSource = `PRIORITY: Apply ${attireText} to the models. Ensure the clothing perfectly matches the cultural and seasonal significance of the occasion. (Note: This mode prioritizes thematic consistency over manual reference).`;
     } else {
         const refText = data.dress_reference ? `(Reference: ${data.dress_reference})` : '';
         
@@ -129,7 +154,7 @@ function generatePromptText(data) {
 
             wardrobeLockBlock = `\n  "WARDROBE_LOCK": {
     "priority": "MAXIMUM — ANCHOR TO REFERENCE",
-    "rule": "The model MUST wear a garment with strict visual consistency to the reference image. This is the primary visual anchor for the generation. Transfer the garment from the reference image onto a live model, ignoring mannequin or studio background elements from the source.",
+    "rule": "The model(s) MUST wear garments with strict visual consistency to the reference image(s). This is the primary visual anchor for the generation. Transfer the garment from the reference image onto live models, ignoring mannequin or studio background elements from the source. Apply Artisan Fidelity rules to each individual reference provided in the group.",
     "reference_image": "${data.dress_reference}",
     "anchored_attributes": {
       "color_fidelity": "Maintain exact color palette and hue from reference",
@@ -148,7 +173,7 @@ function generatePromptText(data) {
     "failure_condition": "If high visual identity cannot be maintained, abort generation and inform the user that the reference garment attributes (color/silhouette) are too complex for the current model to replicate faithfully."
   },`;
 
-            wardrobeSource = `STRICT VISUAL CONSISTENCY LOCK: The model must wear a garment that is visually identical in color, silhouette, and micro-level embroidery pattern to the reference image. This requirement anchors the generation and overrides competing cinematic or lighting effects. ${refText}`;
+            wardrobeSource = `STRICT VISUAL CONSISTENCY LOCK: The model(s) must wear garment(s) that are visually identical in color, silhouette, and micro-level embroidery pattern to the reference image(s). This requirement anchors the generation and overrides competing cinematic or lighting effects. ${refText}`;
 
             antiDriftRules = `\n      "anti_drift_rules": [
         "do not redesign the outfit",
@@ -158,22 +183,10 @@ function generatePromptText(data) {
         "preserve the original garment silhouette and fabric drape physics"
       ],`;
 
-            garmentFocus = `\n      "garment_focus": "The garment must be the primary focal point, clearly visible and unobstructed. Deprioritize environmental effects (like fabric overlays or haze) that obscure the garment's original color and detail. Suppress all mannequin or catalog artifacts from the reference.",`;
+            garmentFocus = `\n      "garment_focus": "The garment(s) must be the primary focal point, clearly visible and unobstructed. Deprioritize environmental effects (like fabric overlays or haze) that obscure the garment's original color and detail. Suppress all mannequin or catalog artifacts from the reference.",`;
         } else {
             wardrobeSource = `MANDATORY: Use the exact dress and material from the original uploaded image reference provided ${refText}. DO NOT alter the style, color, texture, or design. Absolute 1:1 fidelity required. The model must wear the identical garment from the reference image without any modifications.`;
         }
-    }
-
-    // Logo Logic
-    let logoInstruction = "";
-    if (data.enable_logo === 'on' && (data.logo_light || data.logo_dark)) {
-        logoInstruction = `\n  "LOGO_INTEGRATION": {
-    "is_logo_mandatory": true,
-    "light_version": "${data.logo_light || 'None provided'}",
-    "dark_version": "${data.logo_dark || 'None provided'}",
-    "usage_rule": "Select the version with maximum contrast against the generated background (Light for Dark/Rich, Dark for Light/Airy).",
-    "rendering_instruction": "Maintain absolute aspect ratio. Ensure clear negative space around the logo for visibility."
-  },`;
     }
 
     // Capitalization handling
@@ -183,13 +196,14 @@ function generatePromptText(data) {
 
     return `Create a high-fidelity image based on the JSON-BASED DESIGN SPECIFICATION:
 {
-  "creative_type": "${data.creative_type || 'Social Media Post'}",${globalPriorityBlock}${wardrobeLockBlock}${logoInstruction}
+  "creative_type": "${data.creative_type || 'Social Media Post'}",${globalPriorityBlock}${wardrobeLockBlock}
   "dimensions": "${dim.size}",
   "aspect_ratio_constraint": "Strictly maintain aspect ratio without cropping",
   "composition_grid": {
     "spatial_rule": "${grid.spatial_rule}",
+    "group_mode": ${grid.group_mode},
     "active_columns": [${grid.active_columns.join(', ')}],
-    "negative_space_anchor": ${grid.negative_space_anchor},
+    "negative_space_anchor": "${grid.negative_space_anchor}",
     "block_heights": {
       "header": "${dim.block_heights.header}",
       "hero": "${dim.block_heights.hero}",
@@ -213,8 +227,8 @@ function generatePromptText(data) {
       "alignment": "Top-aligned, utilize exactly 2 columns, leave 1 column empty for visual balance"
     },
     "hero_block": {
-      "content": "Primary Model and Garment Focus",
-      "alignment": "Central vertical focus, maintain negative space anchor index ${grid.negative_space_anchor}",
+      "content": "Primary Model(s) and Garment Focus",
+      "alignment": "${grid.group_mode ? 'Harmonious group composition spanning all active columns' : 'Central vertical focus, maintain negative space anchor'}",
       "protection": "Ensure hero element remains unobstructed by text or effects"
     },
     "footer_block": {
@@ -225,13 +239,13 @@ function generatePromptText(data) {
   },
   "style": {
     "visual_elements": {
-      "hero_element": "Live professional South Asian model with natural high-fashion stance",${garmentFocus}
+      "hero_element": "${grid.group_mode ? 'Group of professional South Asian models (' + subjectList + ') in a harmonious stance' : 'Live professional South Asian model (' + subjectList + ') with natural high-fashion stance'}",${garmentFocus}
       "background_strategy": "Create a high-end environment that perfectly matches the blueprint context",
       "icon_standard": "${iconGridSystem}"
     },
     "model_direction": {
-      "appearance": "South Asian Indian celebrity-like professional model",
-      "pose_style": "Natural high-fashion stance with realistic fabric fall. Maintain poise while prioritizing correct garment drape physics.",
+      "appearance": "South Asian Indian celebrity-like professional models",
+      "pose_style": "${grid.group_mode ? 'Harmonious group stance, balanced distribution, realistic fabric fall' : 'Natural high-fashion stance with realistic fabric fall. Maintain poise while prioritizing correct garment drape physics.'}",
       "expression": "Warm, premium, approachable confidence",
       "wardrobe_source": "${wardrobeSource}"
     },

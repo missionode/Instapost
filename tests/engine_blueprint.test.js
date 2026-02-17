@@ -22,7 +22,7 @@ describe('Simplified Contextual Engine (Blueprint)', () => {
         expect(prompt).toMatch(/"mood": "festive, celebratory, warm/i);
         // Should NOT have the Wardrobe Lock V2 specific "Strict Visual Consistency" in the source if festive prioritizes thematic
         // Wait, the spec says "Note: This mode prioritizes thematic consistency over manual reference"
-        expect(prompt).toMatch(/PRIORITY: Apply authentic and opulent Diwali festive attire/i);
+        expect(prompt).toMatch(/PRIORITY: Apply Authentic Festive Attire/i);
     });
 
     test('should anchor aesthetic to Reference Image if festive mode is off', () => {
