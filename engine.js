@@ -231,14 +231,25 @@ function generatePromptText(data) {
     "dark_version": "${data.logo_dark || 'None provided'}",
     "usage_rule": "Select the version with maximum contrast against the generated background. Use 'Light Logo' for Dark/Rich backgrounds and 'Dark Logo' for Light/Airy backgrounds.",
     "sizing_rule": "Scale the logo proportionally based on height to occupy a very subtle 5-8% of the header block height. The logo must feel like a discrete luxury watermark, not a primary graphic element.",
+    "alignment_strategy": "The AI must dynamically determine the optimal horizontal placement (Left, Center, or Right) within the header block to achieve maximum aesthetic balance against the model's position and negative space. Do not force-center if an asymmetrical placement feels more premium.",
     "rendering_instruction": "Maintain absolute aspect ratio. Ensure clear negative space around the logo (padding equal to 150% of logo height) for visibility. If a logo is provided, it MUST be the primary brand identifier; do not generate the brand name in text if the logo is present."
   },`;
     }
 
     // Capitalization handling
     const brandName = toTitleCase(data.brand || 'Brand Name');
-    const hookText = data.ai_content_mode === 'on' ? 'GENERATE_AI_HOOK' : (data.hook || 'Headline').toUpperCase();
-    const offerText = data.ai_content_mode === 'on' ? 'GENERATE_AI_OFFER' : toSentenceCase(data.event_offer || 'Promotional Offer');
+    
+    // Robust check for AI Content Mode
+    const isAICopyActive = data.ai_content_mode === 'on' || data.ai_content_mode === true;
+    
+    // Explicitly derive final text for placeholders
+    const finalHook = isAICopyActive 
+        ? 'MANDATORY: Generate a conversion-optimized luxury fashion headline (HOOK). Do not use generic placeholders. Must align with branding.' 
+        : (data.hook || 'Headline').toUpperCase();
+
+    const finalOffer = isAICopyActive 
+        ? 'MANDATORY: Generate a high-impact promotional offer or event detail. Do not use generic phrases like "Visit our boutique" unless specifically appropriate. Must be punchy.' 
+        : toSentenceCase(data.event_offer || 'Promotional Offer');
 
     return `Create a high-fidelity image based on the JSON-BASED DESIGN SPECIFICATION:
 {
@@ -266,13 +277,13 @@ function generatePromptText(data) {
     "mood": "${aesthetic.mood}",
     "aesthetic_directives": "${aesthetic.aesthetic}",
     "color_strategy": "${aesthetic.colors}",
-    "custom_aesthetic_notes": "${data.artisan_custom_instructions || ''}",
+    "custom_aesthetic_notes": "${data.custom_styling || ''}",
     "note": "Custom aesthetic notes are supplementary enrichment and MUST NOT override WARDROBE_LOCK or micro-level embroidery protection."
   },
   "layout_standards": {
     "header_block": {
       "content": "Brand Identity and Attention Hook",
-      "alignment": "Top-aligned, utilize exactly 2 columns, leave 1 column empty for visual balance"
+      "alignment": "Top-aligned. Position elements dynamically to balance against the model's stance. Utilize asymmetrical alignment if it enhances the high-fashion editorial feel."
     },
     "hero_block": {
       "content": "Primary Model(s) and Garment Focus",
@@ -315,9 +326,9 @@ function generatePromptText(data) {
   },
   "content_placeholders": {
     "brand_logo": "${(data.logo_light || data.logo_dark || data.logo_direct_upload) ? 'RENDER_PROVIDED_LOGO' : 'RENDER_BRAND_NAME_AS_TEXT'}",
-    "hook": "${data.ai_content_mode === 'on' ? 'MANDATORY: Generate a conversion-optimized luxury fashion headline (HOOK). Do not use generic placeholders. Must align with branding.' : hookText}",
+    "hook": "${finalHook}",
     "brand_name": "${brandName}",
-    "event_offer": "${data.ai_content_mode === 'on' ? 'MANDATORY: Generate a high-impact promotional offer or event detail. Do not use generic phrases like \"Visit our boutique\" unless specifically appropriate. Must be punchy.' : offerText}",
+    "event_offer": "${finalOffer}",
     "location_details": "${data.location_details || 'Location'}",
     "contact_details": "${contactStr}",
     "instagram_handle": "${data.social_handles || '@handle'} with grid-aligned Instagram glyph"

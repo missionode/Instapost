@@ -11,12 +11,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const downloadBtn = document.getElementById('download-db-btn');
     const uploadBtn = document.getElementById('upload-db-btn');
 
-    // Initialize Tooltips
-    let copyTooltip;
-    if (typeof bootstrap !== 'undefined' && copyBtn) {
-        copyTooltip = new bootstrap.Tooltip(copyBtn);
-    }
-
     // Anchor Mode Elements
     const anchorModes = document.querySelectorAll('input[name="anchor_mode"]');
     const festivePane = document.getElementById('input_festive');
@@ -29,6 +23,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const targetSubjectsContainer = document.getElementById('target_subjects_container');
 
     const festiveCategories = ['subject_men', 'subject_women', 'subject_kids'];
+
+    // State for separate AI Copy preferences
+    let festiveAiCopyPref = false;
+    let artisanAiCopyPref = false;
+
+    // Initialize Tooltips
+    let copyTooltip;
+    if (typeof bootstrap !== 'undefined' && copyBtn) {
+        copyTooltip = new bootstrap.Tooltip(copyBtn);
+    }
 
     // --- Core Functions ---
     const getCollectedData = () => {
@@ -47,12 +51,12 @@ document.addEventListener('DOMContentLoaded', () => {
             if (el) data[cat] = el.checked;
         });
 
-        // Handle Artisan Collection Data
         const activeAnchorEl = document.querySelector('input[name="anchor_mode"]:checked');
         const activeAnchor = activeAnchorEl ? activeAnchorEl.value : 'festive';
         const directUpload = document.getElementById('artisan_direct_upload').checked;
 
         if (activeAnchor === 'artisan') {
+            const artisanContainer = document.getElementById('artisan-collection-container');
             const rows = artisanContainer.querySelectorAll('.artisan-row');
             const collection = Array.from(rows).map((row, index) => {
                 const urlVal = row.querySelector('.artisan-url').value.trim();
@@ -67,6 +71,10 @@ document.addEventListener('DOMContentLoaded', () => {
             } else if (directUpload) {
                 data.dress_reference = "primary_dress_upload";
             }
+            
+            data.custom_styling = document.getElementById('artisan_custom_instructions').value;
+        } else if (activeAnchor === 'festive') {
+            data.custom_styling = document.getElementById('festive_custom_instructions').value;
         }
 
         // Handle Logo placeholders
@@ -79,9 +87,18 @@ document.addEventListener('DOMContentLoaded', () => {
             if (darkLogo === '' && logoDirectUpload) data.logo_dark = 'dark_logo_upload.png';
         }
 
-        // Handle AI Copy Logic explicitly
+        // Capture separate preferences for persistence
+        data.festive_ai_copy_pref = festiveAiCopyPref;
+        data.artisan_ai_copy_pref = artisanAiCopyPref;
+
+        // Handle CURRENT AI Copy Logic for engine
         const aiCopyEnabled = document.getElementById('ai_content_mode').checked;
         data.ai_content_mode = aiCopyEnabled ? 'on' : 'off';
+        
+        if (aiCopyEnabled) {
+            data.hook = "";
+            data.event_offer = "";
+        }
 
         return data;
     };
@@ -128,7 +145,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const urlInput = row.querySelector('.artisan-url');
             if (isDirectUpload) {
                 urlInput.placeholder = `dress_ref_${index + 1}`;
-                // Optional: Dim if empty? No, keep it clear
             } else {
                 urlInput.placeholder = "Paste dress image URL";
             }
@@ -150,7 +166,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const row = document.createElement('div');
         row.className = 'artisan-row row g-2 mb-3 align-items-center';
         
-        // Check current checkbox state for initial placeholder
         const isDirectUpload = document.getElementById('artisan_direct_upload').checked;
         const rowCount = artisanContainer.querySelectorAll('.artisan-row').length;
         const placeholder = isDirectUpload ? `dress_ref_${rowCount + 1}` : "Paste dress image URL";
@@ -176,10 +191,9 @@ document.addEventListener('DOMContentLoaded', () => {
         row.querySelector('.remove-artisan-row').addEventListener('click', () => {
             row.remove();
             updateRemoveButtons();
-            syncArtisanUI(); // Recalculate placeholders on removal
+            syncArtisanUI();
         });
         
-        // Add autoSave listener to the new input
         row.querySelector('.artisan-url').addEventListener('input', autoSave);
         
         return row;
@@ -197,7 +211,7 @@ document.addEventListener('DOMContentLoaded', () => {
     addArtisanBtn.addEventListener('click', () => {
         artisanContainer.appendChild(createArtisanRow());
         updateRemoveButtons();
-        syncArtisanUI(); // Ensure new row gets correct placeholder
+        syncArtisanUI();
     });
 
     const resetArtisanRows = () => {
@@ -220,17 +234,35 @@ document.addEventListener('DOMContentLoaded', () => {
                 targetSubjectsContainer.classList.remove('d-none');
                 resetArtisanRows();
                 festiveToggle.checked = true;
+                
+                // Restore Festive preference
+                aiContentToggle.disabled = false;
+                aiContentToggle.parentElement.classList.remove('diminished');
+                aiContentToggle.checked = festiveAiCopyPref;
+                syncAIContentUI();
             } else if (mode === 'artisan') {
                 artisanPane.classList.remove('d-none');
                 targetSubjectsContainer.classList.add('d-none');
                 document.getElementById('festive_info').value = '';
                 festiveToggle.checked = false;
+
+                // Restore Artisan preference
+                aiContentToggle.disabled = false;
+                aiContentToggle.parentElement.classList.remove('diminished');
+                aiContentToggle.checked = artisanAiCopyPref;
+                syncAIContentUI();
             } else {
                 aiPane.classList.remove('d-none');
                 targetSubjectsContainer.classList.remove('d-none');
                 resetArtisanRows();
                 document.getElementById('festive_info').value = '';
                 festiveToggle.checked = false;
+                
+                // Disable AI Copy in Auto mode
+                aiContentToggle.checked = false;
+                aiContentToggle.disabled = true;
+                aiContentToggle.parentElement.classList.add('diminished');
+                syncAIContentUI();
             }
             autoSave();
         });
@@ -261,12 +293,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Toggle AI Content Fields
     aiContentToggle.addEventListener('change', () => {
+        // Only save preference if not in Auto mode (where it's forced/disabled)
+        if (!aiContentToggle.disabled) {
+            const activeAnchorEl = document.querySelector('input[name="anchor_mode"]:checked');
+            const mode = activeAnchorEl ? activeAnchorEl.value : 'festive';
+            
+            if (mode === 'festive') festiveAiCopyPref = aiContentToggle.checked;
+            else if (mode === 'artisan') artisanAiCopyPref = aiContentToggle.checked;
+        }
         syncAIContentUI();
         autoSave();
     });
 
     // Auto-save for text inputs
-    const autoSaveFields = ['brand', 'location_details', 'social_handles', 'phone', 'whatsapp', 'email', 'hook', 'event_offer', 'festive_info', 'artisan_custom_instructions', 'logo_light', 'logo_dark'];
+    const autoSaveFields = ['brand', 'location_details', 'social_handles', 'phone', 'whatsapp', 'email', 'hook', 'event_offer', 'festive_info', 'artisan_custom_instructions', 'festive_custom_instructions', 'logo_light', 'logo_dark'];
     autoSaveFields.forEach(id => {
         const el = document.getElementById(id);
         if (el) el.addEventListener('input', autoSave);
@@ -288,19 +328,32 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 }
             });
+            // Restore hidden state variables
+            if (savedData.festive_ai_copy_pref !== undefined) festiveAiCopyPref = savedData.festive_ai_copy_pref;
+            if (savedData.artisan_ai_copy_pref !== undefined) artisanAiCopyPref = savedData.artisan_ai_copy_pref;
         }
     }
 
     // Final UI Sync after initialization
     syncLogoUI();
     syncArtisanUI();
+    
+    // Initial restoration of AI Copy based on active mode
+    const activeAnchorEl = document.querySelector('input[name="anchor_mode"]:checked');
+    const initialMode = activeAnchorEl ? activeAnchorEl.value : 'festive';
+    if (initialMode === 'festive') aiContentToggle.checked = festiveAiCopyPref;
+    else if (initialMode === 'artisan') aiContentToggle.checked = artisanAiCopyPref;
+    else {
+        aiContentToggle.checked = false;
+        aiContentToggle.disabled = true;
+        aiContentToggle.parentElement.classList.add('diminished');
+    }
+    
     syncAIContentUI();
-    const activeAnchor = document.querySelector('input[name="anchor_mode"]:checked');
-    if (activeAnchor) activeAnchor.dispatchEvent(new Event('change'));
+    if (activeAnchorEl) activeAnchorEl.dispatchEvent(new Event('change'));
 
     generateBtn.addEventListener('click', () => {
         if (form.checkValidity()) {
-            // Validation Logic
             const activeAnchorEl = document.querySelector('input[name="anchor_mode"]:checked');
             const activeAnchor = activeAnchorEl ? activeAnchorEl.value : 'festive';
             const artisanDirectUpload = document.getElementById('artisan_direct_upload').checked;
@@ -334,7 +387,6 @@ document.addEventListener('DOMContentLoaded', () => {
             if (typeof saveBrandData === 'function') saveBrandData(data);
             generatePrompt(data);
 
-            // Artisan Reset UX
             if (activeAnchor === 'artisan') resetArtisanRows();
         } else {
             form.reportValidity();
@@ -364,7 +416,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Export/Import
     downloadBtn.addEventListener('click', () => { if (typeof exportData === 'function') exportData(); });
     uploadBtn.addEventListener('click', () => {
         const fi = document.createElement('input');
