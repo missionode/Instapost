@@ -62,8 +62,8 @@ describe('Simplified Contextual Engine (Blueprint)', () => {
 
     test('should maintain Layout & Typography Guardrails', () => {
         const prompt = engine.generatePromptText(baseData);
-        expect(prompt).toMatch(/"layout_standards"/);
-        expect(prompt).toMatch(/"safe_zones"/);
+        expect(prompt).toMatch(/"composition_grid"/);
+        expect(prompt).toMatch(/"block_heights"/);
         expect(prompt).toMatch(/"typography_style"/);
     });
 });

@@ -1,7 +1,19 @@
 const creativeTypeDimensions = {
-    "Square Post": { size: "1080 x 1080 px (1:1)", scale: "Balanced centered scaling" },
-    "Portrait Post": { size: "1080 x 1350 px (4:5)", scale: "Vertical emphasis with larger Hook area" },
-    "Reel/Story": { size: "1080 x 1920 px (9:16)", scale: "Dynamic vertical scaling, prioritized top-third Hook placement" }
+    "Square Post": { 
+        size: "1080 x 1080 px (1:1)", 
+        scale: "Balanced centered scaling",
+        block_heights: { header: "20%", hero: "60%", footer: "20%" }
+    },
+    "Portrait Post": { 
+        size: "1080 x 1350 px (4:5)", 
+        scale: "Vertical emphasis with larger Hook area",
+        block_heights: { header: "20%", hero: "60%", footer: "20%" }
+    },
+    "Reel/Story": { 
+        size: "1080 x 1920 px (9:16)", 
+        scale: "Dynamic vertical scaling, prioritized top-third Hook placement",
+        block_heights: { header: "25%", hero: "50%", footer: "25%" } // More breathing room for UI
+    }
 };
 
 function toTitleCase(str) {
@@ -14,8 +26,24 @@ function toSentenceCase(str) {
     return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
 }
 
+function deriveGridStrategy(data) {
+    // 3x3 Grid / Asymmetrical 2-of-3 Column Rule
+    // Decide which column to leave empty (Negative Space) based on Hero focus.
+    // Default: Clear Column 3 (Right) for most asymmetrical designs.
+    let negativeSpaceAnchor = 3;
+    let activeColumns = [1, 2];
+
+    // If we have a dress reference, we might want to clear based on expected detail.
+    // For now, we use a balanced asymmetrical default but provide the structure.
+    return {
+        spatial_rule: "Rule of Thirds / Asymmetrical 2-of-3",
+        active_columns: activeColumns,
+        negative_space_anchor: negativeSpaceAnchor,
+        grid_logic: "Content utilizes 2 columns; 1 column remains mandatory empty negative space to protect model/garment focus."
+    };
+}
+
 function deriveContextualAesthetic(data) {
-    // 1. Festive/Seasonal Mode (Highest Override)
     if (data.festive_mode === 'on' && data.festive_info) {
         return {
             context: `${data.festive_info} Festive Celebration`,
@@ -25,7 +53,6 @@ function deriveContextualAesthetic(data) {
         };
     }
 
-    // 2. Reference Image (Visual Anchor)
     if (data.dress_reference) {
         return {
             context: "Visual Anchor Reference Matching",
@@ -35,7 +62,6 @@ function deriveContextualAesthetic(data) {
         };
     }
 
-    // 3. Semantic Content Analysis
     if (data.hook || data.event_offer) {
         const contextSubject = (data.hook || data.event_offer).toUpperCase();
         return {
@@ -46,7 +72,6 @@ function deriveContextualAesthetic(data) {
         };
     }
 
-    // 4. AI Baseline (Default)
     return {
         context: "Premium Minimalist Branding",
         aesthetic: "Clean, airy, and sophisticated minimalist layout with a focus on high-end luxury lifestyle vibes.",
@@ -60,6 +85,7 @@ function generatePromptText(data) {
     
     const dim = creativeTypeDimensions[data.creative_type] || creativeTypeDimensions["Square Post"];
     const aesthetic = deriveContextualAesthetic(data);
+    const grid = deriveGridStrategy(data);
     
     const iconGridSystem = "Utilize a uniform grid-based vector icon system (24x24px scale) for all contact symbols and the Instagram glyph to ensure visual consistency and perfect alignment.";
     
@@ -69,7 +95,7 @@ function generatePromptText(data) {
     if (data.email) contactIcons.push(`Email glyph: ${data.email}`);
     const contactStr = contactIcons.join(' | ') || "";
 
-    // Wardrobe Lock Strategy Integration (V2)
+    // Wardrobe Lock Strategy Integration (V3)
     let wardrobeLockBlock = "";
     let globalPriorityBlock = "";
     let antiDriftRules = "";
@@ -130,10 +156,6 @@ function generatePromptText(data) {
         }
     }
 
-    const autoModeInstruction = data.design_type === "auto" 
-        ? `\n  "EXPERIMENTAL_AUTO_MODE_DIRECTIVE": "Analyze reference image and reverse-engineer its visual style, lighting, color palette, and composition.",`
-        : "";
-
     // Logo Logic
     let logoInstruction = "";
     if (data.enable_logo === 'on' && (data.logo_light || data.logo_dark)) {
@@ -142,21 +164,7 @@ function generatePromptText(data) {
     "light_version": "${data.logo_light || 'None provided'}",
     "dark_version": "${data.logo_dark || 'None provided'}",
     "usage_rule": "Select the version with maximum contrast against the generated background (Light for Dark/Rich, Dark for Light/Airy).",
-    "positioning_and_scale": {
-      "Square Post": {
-        "position": "Centered top-third or bottom-center (Y-axis offset: 5%)",
-        "constraints": "Width: 15-20% of total width | Max Height: 8% of total height"
-      },
-      "Portrait Post": {
-        "position": "Top-left corner or bottom-center (Safe margin: 40px from edge)",
-        "constraints": "Width: 12-15% of total width | Max Height: 6% of total height"
-      },
-      "Reel/Story": {
-        "position": "Top center (10% from top edge) or bottom center (30% from bottom edge to avoid UI overlays)",
-        "constraints": "Width: 18-22% of total width | Max Height: 5% of total height"
-      }
-    },
-    "rendering_instruction": "Maintain absolute aspect ratio. Do not stretch or distort. Ensure clear negative space around the logo for visibility. The logo MUST be visible and identifiable."
+    "rendering_instruction": "Maintain absolute aspect ratio. Ensure clear negative space around the logo for visibility."
   },`;
     }
 
@@ -167,19 +175,39 @@ function generatePromptText(data) {
 
     return `Create a high-fidelity image based on the JSON-BASED DESIGN SPECIFICATION:
 {
-  "creative_type": "${data.creative_type || 'Social Media Post'}",${globalPriorityBlock}${wardrobeLockBlock}${autoModeInstruction}${logoInstruction}
+  "creative_type": "${data.creative_type || 'Social Media Post'}",${globalPriorityBlock}${wardrobeLockBlock}${logoInstruction}
   "dimensions": "${dim.size}",
   "aspect_ratio_constraint": "Strictly maintain aspect ratio without cropping",
-  "layout_standards": {
-    "alignment": "Centered and visually balanced alignment",
-    "safe_zones": "Strict 10% inner padding from all edges to ensure mobile readability",
-    "placement_logic": "Strategic Top-Mid-Bottom stack: Hook (Top), Hero Model (Center), Brand & Info (Bottom)"
+  "composition_grid": {
+    "spatial_rule": "${grid.spatial_rule}",
+    "active_columns": [${grid.active_columns.join(', ')}],
+    "negative_space_anchor": ${grid.negative_space_anchor},
+    "block_heights": {
+      "header": "${dim.block_heights.header}",
+      "hero": "${dim.block_heights.hero}",
+      "footer": "${dim.block_heights.footer}"
+    },
+    "logic": "${grid.grid_logic}"
   },
   "design_blueprint": {
     "context": "${aesthetic.context}",
     "mood": "${aesthetic.mood}",
     "aesthetic_directives": "${aesthetic.aesthetic}",
     "color_strategy": "${aesthetic.colors}"
+  },
+  "layout_standards": {
+    "header_block": {
+      "content": "Brand Identity and Attention Hook",
+      "alignment": "Top-aligned, utilize active columns"
+    },
+    "hero_block": {
+      "content": "Primary Model and Garment Focus",
+      "alignment": "Central vertical focus, maintain negative space anchor"
+    },
+    "footer_block": {
+      "content": "Marketing Offer and Contact Details",
+      "alignment": "Bottom-aligned, utilize sub-grid columns"
+    }
   },
   "style": {
     "visual_elements": {
@@ -195,7 +223,7 @@ function generatePromptText(data) {
     },
     "typography_style": {
       "hierarchy": "logo > hook > brand > offer > event details > contact > instagram",
-      "alignment": "Centered and visually balanced alignment",
+      "alignment": "Balanced asymmetrical alignment based on active grid columns",
       "responsive_scaling": "${dim.scale}",
       "readability_rules": {
         "contrast_ratio": "minimum 7:1 contrast ratio (WCAG AAA)",
