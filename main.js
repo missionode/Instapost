@@ -139,6 +139,17 @@ document.addEventListener('DOMContentLoaded', () => {
             if (typeof saveBrandData === 'function') saveBrandData(data);
             
             generatePrompt(data);
+
+            // Artisan Reset UX: Clear subjects after generating in Artisan mode
+            const activeAnchor = document.querySelector('input[name="anchor_mode"]:checked');
+            if (activeAnchor && activeAnchor.value === 'artisan') {
+                categories.forEach(cat => {
+                    document.getElementById(cat).checked = false;
+                });
+                // Note: We keep "Women" as a safe default if everything is unchecked? 
+                // Actually, the user asked to reset for more control. 
+                // I will reset all to false.
+            }
         } else {
             form.reportValidity();
         }

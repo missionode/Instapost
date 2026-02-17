@@ -11,5 +11,7 @@ Key Features:
 - **Advanced Contextual Engine:**
     - **Semantic Blueprinting:** Generates descriptive "Design Blueprints" for production-grade AI.
     - **Artisan Fidelity (9.5+ Score):** Advanced embroidery protection and mannequin suppression.
+    - **Multi-Subject Composition:** Intelligent handling of multiple models (Men, Women, Kids).
+    - **Group Mode:** Automatic grid expansion to full-width when multiple subjects or references are selected.
 - Prompt Generation: Outputs complex, structured JSON blueprints optimized for high-end diffusion models.
 - Persistence & Portability: `localStorage` integration with JSON export/import for database management.
