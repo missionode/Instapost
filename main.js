@@ -16,6 +16,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const festivePane = document.getElementById('input_festive');
     const artisanPane = document.getElementById('input_artisan');
     const aiPane = document.getElementById('input_ai');
+    const subjectSelection = document.getElementById('subject_selection');
+    
     const festiveInput = document.getElementById('festive_info');
     const dressInput = document.getElementById('dress_reference');
     const festiveToggle = document.getElementById('festive_mode'); // Hidden checkbox
@@ -29,6 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
             festivePane.classList.add('d-none');
             artisanPane.classList.add('d-none');
             aiPane.classList.add('d-none');
+            subjectSelection.classList.remove('d-none');
 
             // 2. Clear inactive fields to prevent collision
             if (mode === 'festive') {
@@ -41,6 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 festiveToggle.checked = false;
             } else {
                 aiPane.classList.remove('d-none');
+                subjectSelection.classList.add('d-none'); // Hide subjects for full AI freedom
                 festiveInput.value = '';
                 dressInput.value = '';
                 festiveToggle.checked = false;
@@ -125,6 +129,13 @@ document.addEventListener('DOMContentLoaded', () => {
             const formData = new FormData(form);
             const data = Object.fromEntries(formData.entries());
             
+            // FormData only includes checked checkboxes. 
+            // We need to explicitly handle unchecked ones for isGroupMode logic
+            const categories = ['subject_men', 'subject_women', 'subject_kids', 'subject_unisex'];
+            categories.forEach(cat => {
+                data[cat] = document.getElementById(cat).checked;
+            });
+
             if (typeof saveBrandData === 'function') saveBrandData(data);
             
             generatePrompt(data);

@@ -8,12 +8,15 @@ function saveBrandData(data) {
         phone: data.phone,
         whatsapp: data.whatsapp,
         email: data.email,
-        design_type: data.design_type,
         creative_type: data.creative_type,
         logo_dark: data.logo_dark,
         logo_light: data.logo_light,
         enable_logo: data.enable_logo,
-        festive_mode: data.festive_mode,
+        anchor_mode: data.anchor_mode,
+        subject_men: data.subject_men,
+        subject_women: data.subject_women,
+        subject_kids: data.subject_kids,
+        subject_unisex: data.subject_unisex,
         ai_content_mode: data.ai_content_mode
     };
     if (typeof localStorage !== 'undefined') {
