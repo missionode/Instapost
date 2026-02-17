@@ -63,7 +63,7 @@ describe('Prompt Generation Engine', () => {
 
     test('should include STRICT VISUAL CONSISTENCY LOCK in model_direction', () => {
       const prompt = engine.generatePromptText(data);
-      expect(prompt).toMatch(/"wardrobe_source": "STRICT VISUAL CONSISTENCY LOCK: The model must wear a garment that is visually identical in color, silhouette, and pattern/);
+      expect(prompt).toMatch(/"wardrobe_source": "STRICT VISUAL CONSISTENCY LOCK: The model must wear a garment that is visually identical in color, silhouette, and micro-level embroidery pattern/);
     });
 
     test('should include garment_focus in visual_elements', () => {

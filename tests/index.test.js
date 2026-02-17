@@ -77,4 +77,17 @@ describe('index.html form elements', () => {
     expect(document.getElementById('download-db-btn')).toBeTruthy();
     expect(document.getElementById('upload-db-btn')).toBeTruthy();
   });
+
+  test('should have tab navigation for aesthetic selection', () => {
+    expect(document.getElementById('aestheticTab')).toBeTruthy();
+    expect(document.getElementById('festive-tab')).toBeTruthy();
+    expect(document.getElementById('url-tab')).toBeTruthy();
+    expect(document.getElementById('content-tab')).toBeTruthy();
+  });
+
+  test('should have corresponding tab panes', () => {
+    expect(document.getElementById('festive-pane')).toBeTruthy();
+    expect(document.getElementById('url-pane')).toBeTruthy();
+    expect(document.getElementById('content-pane')).toBeTruthy();
+  });
 });

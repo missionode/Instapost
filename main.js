@@ -3,8 +3,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const copyBtn = document.getElementById('copy-btn');
     const form = document.getElementById('instapost-form');
     const outputArea = document.getElementById('prompt-output');
-    const festiveToggle = document.getElementById('festive_mode');
-    const festiveContainer = document.getElementById('festive_input_container');
     const aiContentToggle = document.getElementById('ai_content_mode');
     const manualContentFields = document.getElementById('manual_content_fields');
     const aiContentNote = document.getElementById('ai_content_note');
@@ -13,6 +11,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const downloadBtn = document.getElementById('download-db-btn');
     const uploadBtn = document.getElementById('upload-db-btn');
 
+    // Hidden Festive Toggle for engine compatibility
+    const festiveInput = document.getElementById('festive_mode');
+
     // Create a hidden file input for uploading
     const fileInput = document.createElement('input');
     fileInput.type = 'file';
@@ -20,13 +21,17 @@ document.addEventListener('DOMContentLoaded', () => {
     fileInput.style.display = 'none';
     document.body.appendChild(fileInput);
 
-    // Toggle Festive Input
-    festiveToggle.addEventListener('change', () => {
-        if (festiveToggle.checked) {
-            festiveContainer.classList.remove('d-none');
-        } else {
-            festiveContainer.classList.add('d-none');
-        }
+    // Tab Syncing: Set festive_mode checkbox based on active tab
+    const syncFestiveMode = () => {
+        const activeTabId = document.querySelector('#aestheticTab .nav-link.active').id;
+        festiveInput.checked = (activeTabId === 'festive-tab');
+    };
+
+    // Listen for tab changes
+    document.querySelectorAll('#aestheticTab button').forEach(tabEl => {
+        tabEl.addEventListener('shown.bs.tab', () => {
+            syncFestiveMode();
+        });
     });
 
     // Toggle Logo Input
@@ -85,7 +90,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 const field = form.elements[key];
                 if (field) {
                     if (field instanceof RadioNodeList) {
-                        // Handle radio buttons (creative_type)
                         for (const radio of field) {
                             if (radio.value === savedData[key]) {
                                 radio.checked = true;
@@ -93,10 +97,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         }
                     } else if (field.type === 'checkbox') {
                         field.checked = savedData[key] === 'on' || savedData[key] === true;
-                        // Trigger change events to update UI visibility
                         field.dispatchEvent(new Event('change'));
                     } else {
-                        // Handle text inputs and select fields
                         field.value = savedData[key];
                     }
                 }
@@ -106,10 +108,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     generateBtn.addEventListener('click', () => {
         if (form.checkValidity()) {
+            syncFestiveMode(); // Ensure festive mode is correct before gathering data
             const formData = new FormData(form);
             const data = Object.fromEntries(formData.entries());
             
-            // Save semi-static fields (function from storage.js)
+            // Save semi-static fields
             if (typeof saveBrandData === 'function') {
                 saveBrandData(data);
             }
@@ -124,14 +127,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const text = outputArea.value;
         if (text) {
             navigator.clipboard.writeText(text).then(() => {
-                // Update tooltip text temporarily
                 const originalTitle = copyBtn.getAttribute('data-bs-original-title') || 'Copy to clipboard';
-                
                 if (copyTooltip) {
                     copyBtn.setAttribute('data-bs-original-title', 'Copied!');
                     copyTooltip.show();
-                    
-                    // Reset after 2 seconds
                     setTimeout(() => {
                         copyBtn.setAttribute('data-bs-original-title', originalTitle);
                         copyTooltip.hide();
@@ -144,11 +143,29 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     function generatePrompt(data) {
-        // Use the real prompt generation engine from engine.js
         if (typeof generatePromptText === 'function') {
+            // Prioritize Active Tab Data for the prompt engine
+            const activeTabId = document.querySelector('#aestheticTab .nav-link.active').id;
+            
+            // If Festive Tab is NOT active, ignore festive_info
+            if (activeTabId !== 'festive-tab') {
+                data.festive_info = '';
+                data.festive_mode = '';
+            }
+            // If URL Tab is NOT active, ignore dress_reference
+            if (activeTabId !== 'url-tab') {
+                data.dress_reference = '';
+            }
+            // If Content Tab is NOT active, ignore hook/event (unless needed as fallback? 
+            // Actually, we'll let the engine handle fallbacks, but we clear inputs from inactive tabs)
+            if (activeTabId !== 'content-tab') {
+                // If we are in festive or URL mode, we might still want the hook/offer if provided?
+                // The hierarchy is Festive > URL > Content. 
+                // To keep it simple: we only send what's in the active tab.
+            }
+
             outputArea.value = generatePromptText(data);
         } else {
-            // Fallback
             outputArea.value = "Error: Prompt engine not loaded.";
         }
     }
