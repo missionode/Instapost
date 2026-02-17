@@ -100,28 +100,31 @@ function generatePromptText(data) {
     "anchored_attributes": {
       "color_fidelity": "Maintain exact color palette and hue from reference",
       "silhouette": "Preserve the specific garment structure, cut, and drape",
-      "surface_details": "Replicate the pattern type, embroidery style, and fabric texture"
+      "surface_details": "Replicate the pattern type, embroidery style, and fabric texture exactly. Preserve micro-level embroidery density and motif spacing; do not simplify patterns."
     },
     "hard_constraints": [
       "do not change primary color",
       "do not alter garment silhouette",
       "do not substitute pattern style",
-      "do not add extraneous stylistic embellishments"
+      "do not add extraneous stylistic embellishments",
+      "forbid flat catalog lighting",
+      "forbid mannequin posture",
+      "forbid product-only framing"
     ],
     "failure_condition": "If high visual identity cannot be maintained, abort generation and inform the user that the reference garment attributes (color/silhouette) are too complex for the current model to replicate faithfully."
   },`;
 
-            wardrobeSource = `STRICT VISUAL CONSISTENCY LOCK: The model must wear a garment that is visually identical in color, silhouette, and pattern to the reference image. This requirement anchors the generation and overrides competing cinematic or lighting effects. ${refText}`;
+            wardrobeSource = `STRICT VISUAL CONSISTENCY LOCK: The model must wear a garment that is visually identical in color, silhouette, and micro-level embroidery pattern to the reference image. This requirement anchors the generation and overrides competing cinematic or lighting effects. ${refText}`;
 
             antiDriftRules = `\n      "anti_drift_rules": [
         "do not redesign the outfit",
         "do not restyle the garment",
         "do not substitute similar but different dresses",
-        "do not modify the core embroidery or pattern structure",
-        "preserve the original garment silhouette and drape"
+        "do not simplify the core embroidery or pattern structure",
+        "preserve the original garment silhouette and fabric drape physics"
       ],`;
 
-            garmentFocus = `\n      "garment_focus": "The garment must be the primary focal point, clearly visible and unobstructed. Deprioritize environmental effects (like fabric overlays or haze) that obscure the garment's original color and detail.",`;
+            garmentFocus = `\n      "garment_focus": "The garment must be the primary focal point, clearly visible and unobstructed. Deprioritize environmental effects (like fabric overlays or haze) that obscure the garment's original color and detail. Suppress all mannequin or catalog artifacts from the reference.",`;
         } else {
             wardrobeSource = `MANDATORY: Use the exact dress and material from the original uploaded image reference provided ${refText}. DO NOT alter the style, color, texture, or design. Absolute 1:1 fidelity required. The model must wear the identical garment from the reference image without any modifications.`;
         }
@@ -180,13 +183,13 @@ function generatePromptText(data) {
   },
   "style": {
     "visual_elements": {
-      "hero_element": "Dynamic professional South Asian model with natural editorial pose",${garmentFocus}
+      "hero_element": "Live professional South Asian model with natural high-fashion stance",${garmentFocus}
       "background_strategy": "Create a high-end environment that perfectly matches the blueprint context",
       "icon_standard": "${iconGridSystem}"
     },
     "model_direction": {
       "appearance": "South Asian Indian celebrity-like professional model",
-      "pose_style": "Confident, elegant posture, fashion editorial feel. Ensure pose is dynamic yet natural.",
+      "pose_style": "Natural high-fashion stance with realistic fabric fall. Maintain poise while prioritizing correct garment drape physics.",
       "expression": "Warm, premium, approachable confidence",
       "wardrobe_source": "${wardrobeSource}"
     },

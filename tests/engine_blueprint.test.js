@@ -34,6 +34,9 @@ describe('Simplified Contextual Engine (Blueprint)', () => {
         expect(prompt).toMatch(/"context": "Visual Anchor Reference Matching"/i);
         expect(prompt).toMatch(/"WARDROBE_LOCK"/);
         expect(prompt).toMatch(/STRICT VISUAL CONSISTENCY LOCK/i);
+        expect(prompt).toMatch(/Preserve micro-level embroidery density/i);
+        expect(prompt).toMatch(/forbid mannequin posture/i);
+        expect(prompt).toMatch(/natural high-fashion stance/i);
     });
 
     test('should derive aesthetic from Content (Hook/Offer) if no image/festival', () => {
