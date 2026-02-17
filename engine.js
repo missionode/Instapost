@@ -363,7 +363,13 @@ function generatePromptText(data) {
     if (data.phone) contactIcons.push(`Phone glyph: ${data.phone}`);
     if (data.whatsapp) contactIcons.push(`WhatsApp glyph: ${data.whatsapp}`);
     if (data.email) contactIcons.push(`Email glyph: ${data.email}`);
-    const contactStr = contactIcons.join(' | ') || "None provided";
+    const contactStr = contactIcons.join(' | ') || "";
+
+    // Wardrobe Lock Strategy Integration
+    let wardrobeLockBlock = "";
+    let globalPriorityBlock = "";
+    let antiDriftRules = "";
+    let garmentFocus = "";
 
     // Dress Reference Handling: Festive Mode skips manual reference, all others strict 1:1.
     let wardrobeSource;
@@ -371,7 +377,51 @@ function generatePromptText(data) {
         wardrobeSource = `PRIORITY: Apply authentic and opulent ${data.festive_info} festive attire to the model. Ensure the clothing perfectly matches the cultural and seasonal significance of the occasion. (Note: This mode prioritizes thematic consistency over manual reference).`;
     } else {
         const refText = data.dress_reference ? `(Reference: ${data.dress_reference})` : '';
-        wardrobeSource = `MANDATORY: Use the exact dress and material from the original uploaded image reference provided ${refText}. DO NOT alter the style, color, texture, or design. Absolute 1:1 fidelity required. The model must wear the identical garment from the reference image without any modifications.`;
+        
+        if (data.dress_reference) {
+            // Step 1: Global Priority & Wardrobe Lock Blocks
+            globalPriorityBlock = `\n  "GLOBAL_RENDER_PRIORITY": {
+    "order_of_importance": [
+      "WARDROBE_FIDELITY",
+      "FACE_REALISM",
+      "TEXT_READABILITY",
+      "SCENE_STYLING"
+    ],
+    "rule": "Higher priority items override lower priority styling instructions."
+  },`;
+
+            wardrobeLockBlock = `\n  "WARDROBE_LOCK": {
+    "priority": "CRITICAL — DO NOT OVERRIDE",
+    "rule": "The model MUST wear the exact garment from the reference image with strict visual fidelity.",
+    "reference_image": "${data.dress_reference}",
+    "hard_constraints": [
+      "no color change",
+      "no fabric change",
+      "no pattern change",
+      "no silhouette change",
+      "no embellishment change",
+      "no stylistic reinterpretation"
+    ],
+    "failure_condition": "If exact match cannot be maintained, abort generation."
+  },`;
+
+            // Step 2: Upgraded Model Direction
+            wardrobeSource = `EXACT GARMENT LOCK: The model must wear the identical dress from the reference image with pixel-level fidelity. This requirement overrides all cinematic styling, lighting mood, and fashion reinterpretation. Absolute 1:1 visual match required. ${refText}`;
+
+            // Step 3: Negative Guardrails
+            antiDriftRules = `\n      "anti_drift_rules": [
+        "do not redesign the outfit",
+        "do not restyle the garment",
+        "do not substitute similar dresses",
+        "do not enhance or modify embroidery",
+        "preserve original garment structure"
+      ],`;
+
+            // Step 4: Visual Anchoring
+            garmentFocus = `\n      "garment_focus": "Ensure the dress is clearly visible, well-lit, and unobstructed by foreground effects or fabric overlays.",`;
+        } else {
+            wardrobeSource = `MANDATORY: Use the exact dress and material from the original uploaded image reference provided ${refText}. DO NOT alter the style, color, texture, or design. Absolute 1:1 fidelity required. The model must wear the identical garment from the reference image without any modifications.`;
+        }
     }
 
     let festiveInstruction = "";
@@ -419,7 +469,7 @@ function generatePromptText(data) {
 
     return `Create a high-fidelity image based on the JSON-BASED DESIGN SPECIFICATION:
 {
-  "creative_type": "${data.creative_type || 'Social Media Post'}",${festiveInstruction}${autoModeInstruction}${logoInstruction}
+  "creative_type": "${data.creative_type || 'Social Media Post'}",${globalPriorityBlock}${wardrobeLockBlock}${festiveInstruction}${autoModeInstruction}${logoInstruction}
   "dimensions": "${dim.size}",
   "aspect_ratio_constraint": "Strictly maintain aspect ratio without cropping",
   "layout_standards": {
@@ -446,7 +496,7 @@ function generatePromptText(data) {
       "hero_element": "${style.visual_elements.hero}",
       "background_style": "${style.visual_elements.background}",
       "midground": "${style.visual_elements.midground}",
-      "foreground": "${style.visual_elements.foreground}",
+      "foreground": "${style.visual_elements.foreground}",${garmentFocus}
       "decor_accents": "${style.visual_elements.accents}",
       "icon_standard": "${iconGridSystem}"
     },
@@ -469,7 +519,7 @@ function generatePromptText(data) {
       }
     },
     "finish": {
-      "quality": "photorealistic and original-looking",
+      "quality": "photorealistic and original-looking",${antiDriftRules}
       "overall_feel": "premium cinematic digital marketing asset optimized for ${data.creative_type}"
     }
   },
