@@ -24,3 +24,6 @@ This plan outlines the steps to implement a multi-subject layout system, allowin
 - [x] Task: Update `engine.js` to parse this structured collection data for mapping and group mode detection. (b1ee8b4)
 - [x] Task: Final end-to-end verification of the "Collection Mapping" workflow. (b1ee8b4)
 - [ ] Task: Conductor - User Manual Verification 'Phase 3: Collection Builder' (Protocol in workflow.md)
+
+## Phase: Review Fixes
+- [x] Task: Apply review suggestions (328e093)
