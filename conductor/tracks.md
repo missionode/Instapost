@@ -20,4 +20,4 @@ This file tracks all major tracks for the project. Each track has its own detail
 ---
 
 - [x] **Track: Implement multi-subject layout system with category checkboxes**
-*Link: [./tracks/multi_subject_composition_20260217/](./multi_subject_composition_20260217/)*
+*Link: [./archive/multi_subject_composition_20260217/](./archive/multi_subject_composition_20260217/)*
