@@ -28,6 +28,12 @@ h1, h2, h3, h4, h5, h6, .fw-bold {
     font-size: 0.75rem;
 }
 
+label {
+    font-weight: 600;
+    color: var(--text-main);
+    margin-bottom: 0.4rem;
+}
+
 /* Flat Components */
 .card {
     border: 1px solid var(--border-color);
@@ -41,6 +47,7 @@ h1, h2, h3, h4, h5, h6, .fw-bold {
     font-size: 0.95rem;
     padding: 0.75rem 1rem;
     transition: border-color 0.2s ease;
+    border-radius: 0.5rem;
 }
 
 .form-control:focus, .form-select:focus {
@@ -52,6 +59,7 @@ h1, h2, h3, h4, h5, h6, .fw-bold {
     font-weight: 600;
     padding: 0.6rem 1.25rem;
     transition: all 0.2s ease;
+    border-radius: 0.5rem;
 }
 
 .btn-primary {
@@ -82,14 +90,19 @@ h1, h2, h3, h4, h5, h6, .fw-bold {
 #prompt-output {
     background-color: #1a1d20 !important;
     color: #4ade80 !important;
-    font-family: 'Inter', monospace;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.85rem;
     line-height: 1.6;
     border: none;
+    border-radius: 0.5rem;
 }
 
 /* Mobile Adjustments */
 @media (max-width: 768px) {
     .btn-group {
         flex-direction: row;
+    }
+    .display-4 {
+        font-size: 2.25rem;
     }
 }
