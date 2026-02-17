@@ -131,7 +131,7 @@ document.addEventListener('DOMContentLoaded', () => {
             
             // FormData only includes checked checkboxes. 
             // We need to explicitly handle unchecked ones for isGroupMode logic
-            const categories = ['subject_men', 'subject_women', 'subject_kids', 'subject_unisex'];
+            const categories = ['subject_men', 'subject_women', 'subject_kids'];
             categories.forEach(cat => {
                 data[cat] = document.getElementById(cat).checked;
             });

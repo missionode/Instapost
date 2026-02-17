@@ -28,7 +28,7 @@ function toSentenceCase(str) {
 
 function isGroupMode(data) {
     // Detect if multiple categories are selected
-    const categories = ['subject_men', 'subject_women', 'subject_kids', 'subject_unisex'];
+    const categories = ['subject_men', 'subject_women', 'subject_kids'];
     const selectedCount = categories.filter(cat => data[cat] === 'on' || data[cat] === true).length;
     
     // Detect if multiple URLs are provided
@@ -117,7 +117,6 @@ function generatePromptText(data) {
     if (data.subject_men === 'on' || data.subject_men === true) selectedSubjects.push("Men");
     if (data.subject_women === 'on' || data.subject_women === true) selectedSubjects.push("Women");
     if (data.subject_kids === 'on' || data.subject_kids === true) selectedSubjects.push("Kids");
-    if (data.subject_unisex === 'on' || data.subject_unisex === true) selectedSubjects.push("Unisex");
     
     const subjectList = selectedSubjects.length > 0 ? selectedSubjects.join(' and ') : "Professional South Asian model";
 

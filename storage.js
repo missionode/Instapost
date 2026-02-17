@@ -16,7 +16,6 @@ function saveBrandData(data) {
         subject_men: data.subject_men,
         subject_women: data.subject_women,
         subject_kids: data.subject_kids,
-        subject_unisex: data.subject_unisex,
         ai_content_mode: data.ai_content_mode
     };
     if (typeof localStorage !== 'undefined') {
