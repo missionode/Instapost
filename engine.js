@@ -27,17 +27,17 @@ function toSentenceCase(str) {
 }
 
 function isGroupMode(data) {
-    // Aggregate subjects from both mode-specific inputs
-    const categories = [
-        'festive_subject_men', 'festive_subject_women', 'festive_subject_kids',
-        'artisan_subject_men', 'artisan_subject_women', 'artisan_subject_kids'
-    ];
-    const selectedCount = categories.filter(cat => data[cat] === 'on' || data[cat] === true).length;
+    // 1. Check Festive Mode subjects
+    const festiveCategories = ['festive_subject_men', 'festive_subject_women', 'festive_subject_kids'];
+    const festiveCount = festiveCategories.filter(cat => data[cat] === 'on' || data[cat] === true).length;
     
-    // Detect if multiple URLs are provided
+    // 2. Check Artisan Collection size
+    const artisanCount = data.artisan_collection ? data.artisan_collection.length : 0;
+    
+    // 3. Fallback to comma detection if structured data is missing
     const hasMultipleUrls = data.dress_reference && data.dress_reference.includes(',');
     
-    return selectedCount > 1 || hasMultipleUrls;
+    return festiveCount > 1 || artisanCount > 1 || hasMultipleUrls;
 }
 
 function deriveGridStrategy(data) {
@@ -115,13 +115,29 @@ function generatePromptText(data) {
     if (data.email) contactIcons.push(`Email glyph: ${data.email}`);
     const contactStr = contactIcons.join(' | ') || "";
 
-    // Subject mapping (Aggregate from both possible sets)
+    // Subject mapping (Aggregate from active anchor)
     const selectedSubjects = [];
-    if (data.festive_subject_men === 'on' || data.festive_subject_men === true || data.artisan_subject_men === 'on' || data.artisan_subject_men === true) selectedSubjects.push("Men");
-    if (data.festive_subject_women === 'on' || data.festive_subject_women === true || data.artisan_subject_women === 'on' || data.artisan_subject_women === true) selectedSubjects.push("Women");
-    if (data.festive_subject_kids === 'on' || data.festive_subject_kids === true || data.artisan_subject_kids === 'on' || data.artisan_subject_kids === true) selectedSubjects.push("Kids");
+    if (data.festive_mode === 'on') {
+        if (data.festive_subject_men === 'on' || data.festive_subject_men === true) selectedSubjects.push("Men");
+        if (data.festive_subject_women === 'on' || data.festive_subject_women === true) selectedSubjects.push("Women");
+        if (data.festive_subject_kids === 'on' || data.festive_subject_kids === true) selectedSubjects.push("Kids");
+    } else if (data.artisan_collection && data.artisan_collection.length > 0) {
+        data.artisan_collection.forEach(item => {
+            if (!selectedSubjects.includes(item.subject)) selectedSubjects.push(item.subject);
+        });
+    } else if (data.dress_reference) {
+        // Fallback for simple single-URL Artisan mode
+        selectedSubjects.push("Women"); // Default fallback
+    }
     
     const subjectList = selectedSubjects.length > 0 ? selectedSubjects.join(' and ') : "Professional South Asian model";
+
+    // Artisan Mapping Directive
+    let collectionMappingDirective = "";
+    if (data.artisan_collection && data.artisan_collection.length > 1) {
+        const mappings = data.artisan_collection.map(item => `Model: ${item.subject} -> URL: ${item.url}`).join(' | ');
+        collectionMappingDirective = `\n  "ARTISAN_COLLECTION_MAPPING": "${mappings}",`;
+    }
 
     // Wardrobe Lock Strategy Integration
     let wardrobeLockBlock = "";
@@ -154,9 +170,9 @@ function generatePromptText(data) {
     "rule": "Higher priority items override lower priority styling instructions."
   },`;
 
-            wardrobeLockBlock = `\n  "WARDROBE_LOCK": {
+            wardrobeLockBlock = `${collectionMappingDirective}\n  "WARDROBE_LOCK": {
     "priority": "MAXIMUM — ANCHOR TO REFERENCE",
-    "rule": "The model(s) MUST wear garments with strict visual consistency to the reference image(s). This is the primary visual anchor for the generation. Transfer the garment from the reference image onto live models, ignoring mannequin or studio background elements from the source. Apply Artisan Fidelity rules to each individual reference provided in the group.",
+    "rule": "The model(s) MUST wear garments with strict visual consistency to the reference image(s). This is the primary visual anchor for the generation. Transfer the garment from the reference image onto live models, ignoring mannequin or studio background elements from the source. Apply Artisan Fidelity rules to each individual reference provided in the collection mapping.",
     "reference_image": "${data.dress_reference}",
     "anchored_attributes": {
       "color_fidelity": "Maintain exact color palette and hue from reference",

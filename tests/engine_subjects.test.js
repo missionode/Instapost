@@ -1,6 +1,6 @@
 const engine = require('../engine.js');
 
-describe('Multi-Subject Composition System', () => {
+describe('Multi-Subject Composition System (Collection Builder)', () => {
     const baseData = {
         brand: 'Vedah',
         hook: 'FAMILY COLLECTION',
@@ -8,26 +8,31 @@ describe('Multi-Subject Composition System', () => {
         location_details: 'Thiruvananthapuram'
     };
 
-    test('should detect Group Mode when multiple categories are selected', () => {
+    test('should detect Group Mode when multiple categories are selected in Festive', () => {
         const groupData = {
             ...baseData,
+            festive_mode: 'on',
             festive_subject_men: 'on',
             festive_subject_women: 'on'
         };
         const prompt = engine.generatePromptText(groupData);
         expect(prompt).toMatch(/"group_mode": true/i);
-        expect(prompt).toMatch(/"active_columns": \[1, 2, 3\]/); // Grid expansion
+        expect(prompt).toMatch(/"active_columns": \[1, 2, 3\]/);
     });
 
-    test('should detect Group Mode when multiple URLs are provided', () => {
-        const multiUrlData = {
+    test('should detect Group Mode when Artisan Collection has multiple items', () => {
+        const multiArtisanData = {
             ...baseData,
-            dress_reference: 'https://example.com/dress1.jpg, https://example.com/dress2.jpg',
-            artisan_subject_women: 'on'
+            artisan_collection: [
+                { url: 'https://example.com/dress1.jpg', subject: 'Women' },
+                { url: 'https://example.com/dress2.jpg', subject: 'Men' }
+            ],
+            dress_reference: 'https://example.com/dress1.jpg, https://example.com/dress2.jpg'
         };
-        const prompt = engine.generatePromptText(multiUrlData);
+        const prompt = engine.generatePromptText(multiArtisanData);
         expect(prompt).toMatch(/"group_mode": true/i);
-        expect(prompt).toMatch(/"active_columns": \[1, 2, 3\]/);
+        expect(prompt).toMatch(/"ARTISAN_COLLECTION_MAPPING":/);
+        expect(prompt).toMatch(/Model: Women -> URL: https:\/\/example\.com\/dress1\.jpg/);
     });
 
     test('should include category-specific attire directives in Festive Mode', () => {
@@ -43,16 +48,16 @@ describe('Multi-Subject Composition System', () => {
         expect(prompt).toMatch(/Coordinated Festive Mini-wear/i);
     });
 
-    test('should apply Individual Artisan Fidelity to multiple references', () => {
+    test('should apply Individual Artisan Fidelity rules using collection mapping', () => {
         const multiArtisanData = {
             ...baseData,
-            dress_reference: 'https://example.com/men.jpg, https://example.com/women.jpg',
-            artisan_subject_men: 'on',
-            artisan_subject_women: 'on'
+            artisan_collection: [
+                { url: 'https://example.com/men.jpg', subject: 'Men' },
+                { url: 'https://example.com/women.jpg', subject: 'Women' }
+            ],
+            dress_reference: 'https://example.com/men.jpg, https://example.com/women.jpg'
         };
         const prompt = engine.generatePromptText(multiArtisanData);
-        expect(prompt).toMatch(/https:\/\/example\.com\/men\.jpg/);
-        expect(prompt).toMatch(/https:\/\/example\.com\/women\.jpg/);
-        expect(prompt).toMatch(/Artisan Fidelity rules to each individual reference/i);
+        expect(prompt).toMatch(/Apply Artisan Fidelity rules to each individual reference provided in the collection mapping/i);
     });
 });

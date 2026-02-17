@@ -47,8 +47,8 @@ describe('index.html form elements', () => {
     expect(document.getElementById('instapost-form')).toBeTruthy();
   });
 
-  test('should have a dress_reference input', () => {
-    expect(document.querySelector('[name="dress_reference"]')).toBeTruthy();
+  test('should have a dress_reference input area', () => {
+    expect(document.querySelector('.artisan-url')).toBeTruthy();
   });
 
   test('should have content fields: hook, brand, event_offer, location_details, social_handles', () => {

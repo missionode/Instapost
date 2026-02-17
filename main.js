@@ -17,38 +17,82 @@ document.addEventListener('DOMContentLoaded', () => {
     const artisanPane = document.getElementById('input_artisan');
     const aiPane = document.getElementById('input_ai');
     
-    const festiveInput = document.getElementById('festive_info');
-    const dressInput = document.getElementById('dress_reference');
     const festiveToggle = document.getElementById('festive_mode'); // Hidden checkbox
+    const artisanContainer = document.getElementById('artisan-collection-container');
+    const addArtisanBtn = document.getElementById('add-artisan-row');
 
-    const artisanCategories = ['artisan_subject_men', 'artisan_subject_women', 'artisan_subject_kids'];
     const festiveCategories = ['festive_subject_men', 'festive_subject_women', 'festive_subject_kids'];
 
-    // Handle Anchor Mode Switching
+    // --- Artisan Collection Builder Logic ---
+    const createArtisanRow = (url = '', subject = 'Women') => {
+        const row = document.createElement('div');
+        row.className = 'artisan-row row g-2 mb-3 align-items-center';
+        row.innerHTML = `
+            <div class="col-md-7">
+                <input type="text" class="form-control border-0 bg-light artisan-url" placeholder="Paste dress image URL" value="${url}">
+            </div>
+            <div class="col-md-4">
+                <select class="form-select border-0 bg-light artisan-subject">
+                    <option value="Women" ${subject === 'Women' ? 'selected' : ''}>Women's Wear</option>
+                    <option value="Men" ${subject === 'Men' ? 'selected' : ''}>Men's Wear</option>
+                    <option value="Kids" ${subject === 'Kids' ? 'selected' : ''}>Kids' Wear</option>
+                </select>
+            </div>
+            <div class="col-md-1 text-end">
+                <button type="button" class="btn btn-link text-danger p-0 remove-artisan-row" title="Remove model">
+                    <i class="bi bi-x-circle-fill fs-5"></i>
+                </button>
+            </div>
+        `;
+        
+        row.querySelector('.remove-artisan-row').addEventListener('click', () => {
+            row.remove();
+            updateRemoveButtons();
+        });
+        
+        return row;
+    };
+
+    const updateRemoveButtons = () => {
+        const rows = artisanContainer.querySelectorAll('.artisan-row');
+        rows.forEach(row => {
+            const btn = row.querySelector('.remove-artisan-row');
+            if (rows.length === 1) btn.classList.add('d-none');
+            else btn.classList.remove('d-none');
+        });
+    };
+
+    addArtisanBtn.addEventListener('click', () => {
+        artisanContainer.appendChild(createArtisanRow());
+        updateRemoveButtons();
+    });
+
+    const resetArtisanRows = () => {
+        artisanContainer.innerHTML = '';
+        artisanContainer.appendChild(createArtisanRow());
+        updateRemoveButtons();
+    };
+
+    // --- Mode Switching ---
     anchorModes.forEach(radio => {
         radio.addEventListener('change', () => {
             const mode = radio.value;
-            
-            // 1. Switch visibility
             festivePane.classList.add('d-none');
             artisanPane.classList.add('d-none');
             aiPane.classList.add('d-none');
 
-            // 2. Clear inactive fields to prevent collision
             if (mode === 'festive') {
                 festivePane.classList.remove('d-none');
-                dressInput.value = '';
-                // Clear Artisan subjects on switch to Festive
-                artisanCategories.forEach(cat => document.getElementById(cat).checked = false);
+                resetArtisanRows();
                 festiveToggle.checked = true;
             } else if (mode === 'artisan') {
                 artisanPane.classList.remove('d-none');
-                festiveInput.value = '';
+                document.getElementById('festive_info').value = '';
                 festiveToggle.checked = false;
             } else {
                 aiPane.classList.remove('d-none');
-                festiveInput.value = '';
-                dressInput.value = '';
+                resetArtisanRows();
+                document.getElementById('festive_info').value = '';
                 festiveToggle.checked = false;
             }
         });
@@ -56,11 +100,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Toggle Logo Input
     logoToggle.addEventListener('change', () => {
-        if (logoToggle.checked) {
-            logoContainer.classList.remove('d-none');
-        } else {
-            logoContainer.classList.add('d-none');
-        }
+        if (logoToggle.checked) logoContainer.classList.remove('d-none');
+        else logoContainer.classList.add('d-none');
     });
 
     // Toggle AI Content Fields
@@ -74,34 +115,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Handle Download/Upload
-    downloadBtn.addEventListener('click', () => {
-        if (typeof exportData === 'function') exportData();
-    });
-
-    uploadBtn.addEventListener('click', () => {
-        const fileInput = document.createElement('input');
-        fileInput.type = 'file';
-        fileInput.accept = '.json';
-        fileInput.onchange = (e) => {
-            const file = e.target.files[0];
-            if (file && typeof importData === 'function') {
-                importData(file, () => {
-                    alert('Data imported! Reloading...');
-                    window.location.reload();
-                });
-            }
-        };
-        fileInput.click();
-    });
-
-    // Initialize Tooltip
-    let copyTooltip;
-    if (typeof bootstrap !== 'undefined') {
-        copyTooltip = new bootstrap.Tooltip(copyBtn);
-    }
-
-    // Load Persistence
+    // Persistence & Persistence Loading
     if (typeof loadBrandData === 'function') {
         const savedData = loadBrandData();
         if (savedData) {
@@ -109,9 +123,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const field = form.elements[key];
                 if (field) {
                     if (field instanceof RadioNodeList) {
-                        for (const radio of field) {
-                            if (radio.value === savedData[key]) radio.checked = true;
-                        }
+                        for (const radio of field) if (radio.value === savedData[key]) radio.checked = true;
                     } else if (field.type === 'checkbox') {
                         field.checked = savedData[key] === 'on' || savedData[key] === true;
                         field.dispatchEvent(new Event('change'));
@@ -120,11 +132,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 }
             });
-            
-            // AFTER Loading: Explicitly reset Artisan subjects (user mandate: reset on load)
-            artisanCategories.forEach(cat => document.getElementById(cat).checked = false);
-
-            // After loading, ensure correct anchor visibility
             const activeAnchor = document.querySelector('input[name="anchor_mode"]:checked');
             if (activeAnchor) activeAnchor.dispatchEvent(new Event('change'));
         }
@@ -135,23 +142,30 @@ document.addEventListener('DOMContentLoaded', () => {
             const formData = new FormData(form);
             const data = Object.fromEntries(formData.entries());
             
-            // Explicitly handle all checkbox categories
-            [...festiveCategories, ...artisanCategories].forEach(cat => {
+            // Handle Festive Checkboxes
+            festiveCategories.forEach(cat => {
                 data[cat] = document.getElementById(cat).checked;
             });
 
-            // Save semi-static fields
+            // Handle Artisan Collection Data
+            const activeAnchor = document.querySelector('input[name="anchor_mode"]:checked').value;
+            if (activeAnchor === 'artisan') {
+                const rows = artisanContainer.querySelectorAll('.artisan-row');
+                const collection = Array.from(rows).map(row => ({
+                    url: row.querySelector('.artisan-url').value,
+                    subject: row.querySelector('.artisan-subject').value
+                })).filter(item => item.url.trim() !== '');
+                
+                data.artisan_collection = collection;
+                // For engine compatibility, set dress_reference to comma-separated URLs
+                data.dress_reference = collection.map(c => c.url).join(', ');
+            }
+
             if (typeof saveBrandData === 'function') saveBrandData(data);
-            
             generatePrompt(data);
 
-            // Artisan Reset UX: Clear subjects after generating in Artisan mode
-            const activeAnchor = document.querySelector('input[name="anchor_mode"]:checked');
-            if (activeAnchor && activeAnchor.value === 'artisan') {
-                artisanCategories.forEach(cat => {
-                    document.getElementById(cat).checked = false;
-                });
-            }
+            // Artisan Reset UX
+            if (activeAnchor === 'artisan') resetArtisanRows();
         } else {
             form.reportValidity();
         }
@@ -177,8 +191,20 @@ document.addEventListener('DOMContentLoaded', () => {
     function generatePrompt(data) {
         if (typeof generatePromptText === 'function') {
             outputArea.value = generatePromptText(data);
-        } else {
-            outputArea.value = "Error: Prompt engine not loaded.";
         }
     }
+
+    // Export/Import
+    downloadBtn.addEventListener('click', () => { if (typeof exportData === 'function') exportData(); });
+    uploadBtn.addEventListener('click', () => {
+        const fi = document.createElement('input');
+        fi.type = 'file'; fi.accept = '.json';
+        fi.onchange = (e) => {
+            const file = e.target.files[0];
+            if (file && typeof importData === 'function') {
+                importData(file, () => { alert('Data imported!'); window.location.reload(); });
+            }
+        };
+        fi.click();
+    });
 });
