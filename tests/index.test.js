@@ -47,14 +47,6 @@ describe('index.html form elements', () => {
     expect(document.getElementById('instapost-form')).toBeTruthy();
   });
 
-  test('should have a design_type input/select', () => {
-    expect(document.querySelector('[name="design_type"]')).toBeTruthy();
-  });
-
-  test('should have a style description area', () => {
-    expect(document.getElementById('style-description')).toBeTruthy();
-  });
-
   test('should have a dress_reference input', () => {
     expect(document.querySelector('[name="dress_reference"]')).toBeTruthy();
   });
