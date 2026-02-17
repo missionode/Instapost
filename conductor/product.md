@@ -1,15 +1,15 @@
 # Initial Concept
-The project is "Instapost", a tool to generate dynamic luxury Instagram posters based on a specific JSON-defined style.
+The project is "Instapost", a context-aware tool to generate high-fidelity luxury Instagram posters using a dynamic semantic blueprint system.
 
 Key Features:
-- A form to input dynamic content:
-    - `design_type` (including **Auto Mode** and various regional/aesthetic styles like Indian, Royal, etc.)
-    - `dress_reference` (Specific outfit reference with strict 1:1 fidelity mandate)
-    - `creative_type` (Square, Portrait, Reel/Story)
-    - `content`: Hook, Brand, Event/Offer (with **AI Content Generation** options), Location, Contact (Phone, WhatsApp, Email), and Instagram Handle.
-- **Advanced Features:**
-    - **Auto Mode:** Automatically mimics the style of an uploaded reference image.
-    - **Festive/Seasonal Mode:** Optimizes decor and mood for specific occasions (Diwali, Christmas, etc.).
-- Prompt Generation: The form generates a complex, structured prompt for an AI (likely image gen) based on the inputs and a pre-defined "luxury instagram poster" style (cinematic, premium, South Asian Indian model, specific color palettes, etc.).
-- Persistence: Use `localStorage` to remember semi-static fields like Hook, Brand, Location Details, and Social Handles.
-- Data Management: Options to download and upload the database (likely the configuration/content data) at the bottom of the form.
+- **Intent-Driven Three-Tabbed UI:** Users select their creative starting point:
+    - **Festive Vibes:** Prioritizes cultural and seasonal authenticity.
+    - **Dress Reference:** Anchors the entire aesthetic to a specific garment for 1:1 fidelity.
+    - **Content Mode:** Derives style automatically from hooks and headlines.
+- **Advanced Contextual Engine:**
+    - **Semantic Blueprinting:** Replaced rigid style templates with a dynamic hierarchy (Festive > Reference > Content) that generates a descriptive "Design Blueprint" for the AI.
+    - **Artisan Fidelity (1:1 Wardrobe Lock):** Advanced prompt hardening to ensure the model wears the exact garment from the reference image, preserving micro-level embroidery and fabric drape while ignoring source artifacts like mannequins.
+    - **Automated Aesthetic Derivation:** Intelligent fallback to premium minimalist defaults if context is sparse.
+- Prompt Generation: The form generates a complex, structured JSON prompt for an AI image generator based on the selected mode and provided details.
+- Persistence: Use `localStorage` to remember semi-static fields like Brand, Location Details, and Social Handles.
+- Data Management: Options to download and upload the database at the bottom of the form.
