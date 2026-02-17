@@ -26,3 +26,4 @@ This file tracks all major tracks for the project. Each track has its own detail
 
 - [x] **Track: Integrate regional context (City/State) into AI model directives**
 *Link: [./archive/regional_context_integration_20260217/](./archive/regional_context_integration_20260217/)*
+\n---\n\n- [ ] **Track: Implement modern Flat Design and Mobile UX polish**\n*Link: [./tracks/flat_design_mobile_ux_20260217/](./tracks/flat_design_mobile_ux_20260217/)*
