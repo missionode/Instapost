@@ -130,7 +130,11 @@ function generatePromptText(data) {
         selectedSubjects.push("Women"); // Default fallback
     }
     
-    const subjectList = selectedSubjects.length > 0 ? selectedSubjects.join(' and ') : "Professional South Asian model";
+    const subjectList = selectedSubjects.length > 0 ? selectedSubjects.join(' and ') : "Professional South Asian Indian model";
+
+    // Regional Casting Nuance
+    const region = data.location_details ? `${data.location_details}, India` : "India";
+    const regionalCastingDirective = `Subtly align model features, skin tones, and regional styling with the specific South Asian Indian cultural background of ${region}.`;
 
     // Artisan Mapping Directive
     let collectionMappingDirective = "";
@@ -269,12 +273,13 @@ function generatePromptText(data) {
   },
   "style": {
     "visual_elements": {
-      "hero_element": "${grid.group_mode ? 'Group of professional South Asian models (' + subjectList + ') in a harmonious stance' : 'Live professional South Asian model (' + subjectList + ') with natural high-fashion stance'}",${garmentFocus}
+      "hero_element": "${grid.group_mode ? 'Group of professional South Asian Indian models (' + subjectList + ') in a harmonious stance' : 'Live professional South Asian Indian model (' + subjectList + ') with natural high-fashion stance'}",${garmentFocus}
       "background_strategy": "Create a high-end environment that perfectly matches the blueprint context",
       "icon_standard": "${iconGridSystem}"
     },
     "model_direction": {
       "appearance": "South Asian Indian celebrity-like professional models",
+      "regional_casting_nuance": "${regionalCastingDirective}",
       "pose_style": "${grid.group_mode ? 'Harmonious group stance, balanced distribution, realistic fabric fall' : 'Natural high-fashion stance with realistic fabric fall. Maintain poise while prioritizing correct garment drape physics.'}",
       "expression": "Warm, premium, approachable confidence",
       "wardrobe_source": "${wardrobeSource}"
