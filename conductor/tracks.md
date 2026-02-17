@@ -11,4 +11,9 @@ This file tracks all major tracks for the project. Each track has its own detail
 
 - [x] **Track: Refactor prompt engine to a context-aware Blueprint system**
 *Link: [./archive/simplified_contextual_engine_20260217/](./archive/simplified_contextual_engine_20260217/)*
-\n---\n\n- [ ] **Track: Implement 3x3 macro-grid composition engine with asymmetrical logic**\n*Link: [./tracks/structural_layout_system_20260217/](./tracks/structural_layout_system_20260217/)*
+
+---
+
+- [~] **Track: Implement 3x3 macro-grid composition engine with asymmetrical logic**
+*Link: [./tracks/structural_layout_system_20260217/](./structural_layout_system_20260217/)*
+\n---\n\n- [ ] **Track: Implement multi-subject layout system with category checkboxes**\n*Link: [./tracks/multi_subject_composition_20260217/](./tracks/multi_subject_composition_20260217/)*
