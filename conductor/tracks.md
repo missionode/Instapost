@@ -25,4 +25,4 @@ This file tracks all major tracks for the project. Each track has its own detail
 ---
 
 - [x] **Track: Integrate regional context (City/State) into AI model directives**
-*Link: [./tracks/regional_context_integration_20260217/](./tracks/regional_context_integration_20260217/)*
+*Link: [./archive/regional_context_integration_20260217/](./archive/regional_context_integration_20260217/)*
