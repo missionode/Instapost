@@ -11,26 +11,40 @@ document.addEventListener('DOMContentLoaded', () => {
     const downloadBtn = document.getElementById('download-db-btn');
     const uploadBtn = document.getElementById('upload-db-btn');
 
-    // Hidden Festive Toggle for engine compatibility
-    const festiveInput = document.getElementById('festive_mode');
+    // Anchor Mode Elements
+    const anchorModes = document.querySelectorAll('input[name="anchor_mode"]');
+    const festivePane = document.getElementById('input_festive');
+    const artisanPane = document.getElementById('input_artisan');
+    const aiPane = document.getElementById('input_ai');
+    const festiveInput = document.getElementById('festive_info');
+    const dressInput = document.getElementById('dress_reference');
+    const festiveToggle = document.getElementById('festive_mode'); // Hidden checkbox
 
-    // Create a hidden file input for uploading
-    const fileInput = document.createElement('input');
-    fileInput.type = 'file';
-    fileInput.accept = '.json';
-    fileInput.style.display = 'none';
-    document.body.appendChild(fileInput);
+    // Handle Anchor Mode Switching
+    anchorModes.forEach(radio => {
+        radio.addEventListener('change', () => {
+            const mode = radio.value;
+            
+            // 1. Switch visibility
+            festivePane.classList.add('d-none');
+            artisanPane.classList.add('d-none');
+            aiPane.classList.add('d-none');
 
-    // Tab Syncing: Set festive_mode checkbox based on active tab
-    const syncFestiveMode = () => {
-        const activeTabId = document.querySelector('#aestheticTab .nav-link.active').id;
-        festiveInput.checked = (activeTabId === 'festive-tab');
-    };
-
-    // Listen for tab changes
-    document.querySelectorAll('#aestheticTab button').forEach(tabEl => {
-        tabEl.addEventListener('shown.bs.tab', () => {
-            syncFestiveMode();
+            // 2. Clear inactive fields to prevent collision
+            if (mode === 'festive') {
+                festivePane.classList.remove('d-none');
+                dressInput.value = '';
+                festiveToggle.checked = true;
+            } else if (mode === 'artisan') {
+                artisanPane.classList.remove('d-none');
+                festiveInput.value = '';
+                festiveToggle.checked = false;
+            } else {
+                aiPane.classList.remove('d-none');
+                festiveInput.value = '';
+                dressInput.value = '';
+                festiveToggle.checked = false;
+            }
         });
     });
 
@@ -54,35 +68,34 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Handle Download
+    // Handle Download/Upload
     downloadBtn.addEventListener('click', () => {
-        if (typeof exportData === 'function') {
-            exportData();
-        }
+        if (typeof exportData === 'function') exportData();
     });
 
-    // Handle Upload
     uploadBtn.addEventListener('click', () => {
+        const fileInput = document.createElement('input');
+        fileInput.type = 'file';
+        fileInput.accept = '.json';
+        fileInput.onchange = (e) => {
+            const file = e.target.files[0];
+            if (file && typeof importData === 'function') {
+                importData(file, () => {
+                    alert('Data imported! Reloading...');
+                    window.location.reload();
+                });
+            }
+        };
         fileInput.click();
     });
 
-    fileInput.addEventListener('change', (e) => {
-        const file = e.target.files[0];
-        if (file && typeof importData === 'function') {
-            importData(file, (data) => {
-                alert('Data imported successfully! Reloading...');
-                window.location.reload();
-            });
-        }
-    });
-
-    // Initialize Bootstrap Tooltip
+    // Initialize Tooltip
     let copyTooltip;
     if (typeof bootstrap !== 'undefined') {
         copyTooltip = new bootstrap.Tooltip(copyBtn);
     }
 
-    // Load saved brand data on initialization (functions from storage.js)
+    // Load Persistence
     if (typeof loadBrandData === 'function') {
         const savedData = loadBrandData();
         if (savedData) {
@@ -91,9 +104,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (field) {
                     if (field instanceof RadioNodeList) {
                         for (const radio of field) {
-                            if (radio.value === savedData[key]) {
-                                radio.checked = true;
-                            }
+                            if (radio.value === savedData[key]) radio.checked = true;
                         }
                     } else if (field.type === 'checkbox') {
                         field.checked = savedData[key] === 'on' || savedData[key] === true;
@@ -103,19 +114,18 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 }
             });
+            // After loading, ensure correct anchor visibility
+            const activeAnchor = document.querySelector('input[name="anchor_mode"]:checked');
+            if (activeAnchor) activeAnchor.dispatchEvent(new Event('change'));
         }
     }
 
     generateBtn.addEventListener('click', () => {
         if (form.checkValidity()) {
-            syncFestiveMode(); // Ensure festive mode is correct before gathering data
             const formData = new FormData(form);
             const data = Object.fromEntries(formData.entries());
             
-            // Save semi-static fields
-            if (typeof saveBrandData === 'function') {
-                saveBrandData(data);
-            }
+            if (typeof saveBrandData === 'function') saveBrandData(data);
             
             generatePrompt(data);
         } else {
@@ -136,34 +146,12 @@ document.addEventListener('DOMContentLoaded', () => {
                         copyTooltip.hide();
                     }, 2000);
                 }
-            }).catch(err => {
-                console.error('Failed to copy: ', err);
             });
         }
     });
 
     function generatePrompt(data) {
         if (typeof generatePromptText === 'function') {
-            // Prioritize Active Tab Data for the prompt engine (Mutual Exclusivity)
-            const activeTabId = document.querySelector('#aestheticTab .nav-link.active').id;
-            
-            if (activeTabId === 'festive-tab') {
-                // Anchor 1: Festive Special
-                data.dress_reference = ''; // Force hide URL from engine
-                data.festive_mode = 'on';
-            } else if (activeTabId === 'url-tab') {
-                // Anchor 2: Artisan Spotlight
-                data.festive_info = ''; // Force hide Festival from engine
-                data.festive_mode = '';
-            } else {
-                // Anchor 3: AI Full Auto
-                data.festive_info = '';
-                data.festive_mode = '';
-                data.dress_reference = '';
-            }
-
-            // Marketing Content (data.hook, data.event_offer) are persistent and always sent.
-
             outputArea.value = generatePromptText(data);
         } else {
             outputArea.value = "Error: Prompt engine not loaded.";
