@@ -8,6 +8,7 @@ Key Features:
     - **Multi-Subject Composition:** Intelligent handling of multiple models with category-specific attire directives.
     - **Group Mode:** Automatic grid expansion to full-width when multiple subjects or references are detected.
     - **Artisan Fidelity (9.5+ Score):** Advanced micro-level embroidery protection and mannequin suppression.
+    - **Regional Context Integration:** Subtly aligns model features and regional styling with the specific South Asian Indian cultural background of the provided location (City, State).
 - **Persistent Marketing Content:** Hooks and offers remain visible and integrated across all design paths.
 - Prompt Generation: Outputs complex, structured JSON blueprints optimized for high-end diffusion models.
 - Persistence & Portability: `localStorage` integration with JSON export/import for database management.
