@@ -5,6 +5,7 @@ Key Features:
 - **Modern Flat Design UI:** A minimalist, high-contrast interface optimized for mobile-first workflows, using 100% sans-serif typography (Inter).
 - **Surgical Single-Point Entry:** Eliminates constraint collision by forcing a single design path (Festive, Artisan, or AI's Choice).
 - **Horizontal Action Bars:** Strategic placement of engine toggles (AI Copy, Logo) for better accessibility and reachability on mobile devices.
+- **Visual Format Tiles:** An intuitive, 3-column grid system for selecting output formats (Square, Portrait, Reel), complete with platform-specific icons and aspect ratio subtitles.
 - **Artisan Collection Builder:** A dynamic row-based interface for Artisan mode that allows users to explicitly pair garment URLs with specific model categories.
 - **Advanced Contextual Engine:**
     - **Semantic Blueprinting:** Generates descriptive "Design Blueprints" for production-grade AI.
