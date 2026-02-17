@@ -14,6 +14,10 @@ This file tracks all major tracks for the project. Each track has its own detail
 
 ---
 
-- [~] **Track: Implement 3x3 macro-grid composition engine with asymmetrical logic**
+- [x] **Track: Implement 3x3 macro-grid composition engine with asymmetrical logic**
 *Link: [./tracks/structural_layout_system_20260217/](./structural_layout_system_20260217/)*
-\n---\n\n- [ ] **Track: Implement multi-subject layout system with category checkboxes**\n*Link: [./tracks/multi_subject_composition_20260217/](./tracks/multi_subject_composition_20260217/)*
+
+---
+
+- [x] **Track: Implement multi-subject layout system with category checkboxes**
+*Link: [./tracks/multi_subject_composition_20260217/](./multi_subject_composition_20260217/)*
