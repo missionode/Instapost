@@ -15,18 +15,17 @@ describe('Prompt Generation Engine', () => {
     expect(prompt).toMatch(/NEW ARRIVAL/i);
   });
 
-  test('generatePromptText should include style-specific keywords for luxury style', () => {
+  test('generatePromptText should include Blueprint keywords based on content', () => {
     const data = {
-        design_type: 'luxury instagram poster',
         brand: 'Test',
-        hook: 'Test',
+        hook: 'PREMIUM SALE',
         event_offer: 'Test',
         location_details: 'Test',
         social_handles: 'Test'
     };
     const prompt = engine.generatePromptText(data);
-    expect(prompt).toMatch(/cinematic/i);
-    expect(prompt).toMatch(/gold/i);
+    expect(prompt).toMatch(/"context": "Retail Commercial - PREMIUM SALE"/i);
+    expect(prompt).toMatch(/"design_blueprint"/i);
     expect(prompt).toMatch(/South Asian/i);
   });
 
@@ -57,18 +56,19 @@ describe('Prompt Generation Engine', () => {
       expect(prompt).toMatch(/"GLOBAL_RENDER_PRIORITY"/);
       expect(prompt).toMatch(/"WARDROBE_FIDELITY"/);
       expect(prompt).toMatch(/"WARDROBE_LOCK"/);
+      expect(prompt).toMatch(/"anchored_attributes"/);
       expect(prompt).toMatch(/https:\/\/example\.com\/dress\.jpg/);
-      expect(prompt).toMatch(/"no color change"/);
+      expect(prompt).toMatch(/"do not change primary color"/);
     });
 
-    test('should include EXACT GARMENT LOCK in model_direction', () => {
+    test('should include STRICT VISUAL CONSISTENCY LOCK in model_direction', () => {
       const prompt = engine.generatePromptText(data);
-      expect(prompt).toMatch(/"wardrobe_source": "EXACT GARMENT LOCK: The model must wear the identical dress from the reference image with pixel-level fidelity/);
+      expect(prompt).toMatch(/"wardrobe_source": "STRICT VISUAL CONSISTENCY LOCK: The model must wear a garment that is visually identical in color, silhouette, and pattern/);
     });
 
     test('should include garment_focus in visual_elements', () => {
       const prompt = engine.generatePromptText(data);
-      expect(prompt).toMatch(/"garment_focus": "Ensure the dress is clearly visible, well-lit, and unobstructed by foreground effects or fabric overlays."/);
+      expect(prompt).toMatch(/"garment_focus": "The garment must be the primary focal point/);
     });
 
     test('should include anti_drift_rules in finish section', () => {
