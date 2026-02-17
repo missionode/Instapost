@@ -35,4 +35,4 @@ This file tracks all major tracks for the project. Each track has its own detail
 ---
 
 - [x] **Track: Overhaul output format selector into visual tile system**
-*Link: [./tracks/format_selector_ui_polish_20260217/](./tracks/format_selector_ui_polish_20260217/)*
+*Link: [./archive/format_selector_ui_polish_20260217/](./archive/format_selector_ui_polish_20260217/)*
