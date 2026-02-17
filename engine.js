@@ -27,9 +27,9 @@ function toSentenceCase(str) {
 }
 
 function isGroupMode(data) {
-    // 1. Check Festive Mode subjects
-    const festiveCategories = ['festive_subject_men', 'festive_subject_women', 'festive_subject_kids'];
-    const festiveCount = festiveCategories.filter(cat => data[cat] === 'on' || data[cat] === true).length;
+    // 1. Check Festive/Auto Mode subjects
+    const subjects = ['subject_men', 'subject_women', 'subject_kids'];
+    const count = subjects.filter(cat => data[cat] === 'on' || data[cat] === true).length;
     
     // 2. Check Artisan Collection size
     const artisanCount = data.artisan_collection ? data.artisan_collection.length : 0;
@@ -37,7 +37,7 @@ function isGroupMode(data) {
     // 3. Fallback to comma detection if structured data is missing
     const hasMultipleUrls = !!(data.dress_reference && data.dress_reference.includes(','));
     
-    return festiveCount > 1 || artisanCount > 1 || hasMultipleUrls;
+    return count > 1 || artisanCount > 1 || hasMultipleUrls;
 }
 
 function deriveGridStrategy(data) {
@@ -67,7 +67,7 @@ function deriveContextualAesthetic(data) {
     if (data.festive_mode === 'on' && data.festive_info) {
         return {
             context: `${data.festive_info} Festive Celebration`,
-            aesthetic: `Authentic ${data.festive_info} thematic elements, cultural decor, and seasonal atmospheric lighting.`,
+            aesthetic: `Authentic ${data.festive_info} thematic elements. Shot on 35mm lens for wide environmental context, f/2.8 for gentle background separation. Warm atmospheric lighting with localized festive glow.`,
             mood: "festive, celebratory, warm, and inviting",
             colors: "rich traditional tones with warm celebratory highlights"
         };
@@ -76,7 +76,7 @@ function deriveContextualAesthetic(data) {
     if (data.dress_reference) {
         return {
             context: "Visual Anchor Reference Matching",
-            aesthetic: "Reverse-engineer and replicate the visual style, lighting, color palette, and composition of the provided reference image.",
+            aesthetic: "High-end editorial fashion photography. Match the specific lighting rig, lens compression, and color grade of the reference. Razor-sharp focus on garment textures.",
             mood: "Synchronized with reference image aesthetic",
             colors: "Derived from reference image palette"
         };
@@ -86,7 +86,7 @@ function deriveContextualAesthetic(data) {
         const contextSubject = (data.hook || data.event_offer).toUpperCase();
         return {
             context: `Retail Commercial - ${contextSubject}`,
-            aesthetic: "Bold commercial layout with high-impact product presentation and clean modern lines.",
+            aesthetic: "Clean commercial studio photography. Shot on 50mm prime lens, f/8 for deep focus. High-key lighting with soft commercial shadows and high-contrast product clarity.",
             mood: "High-energy, commercial, inviting",
             colors: "vibrant brand-centric colors with bright saturated accents"
         };
@@ -94,7 +94,7 @@ function deriveContextualAesthetic(data) {
 
     return {
         context: "Premium Minimalist Branding",
-        aesthetic: "Clean, airy, and sophisticated minimalist layout with a focus on high-end luxury lifestyle vibes.",
+        aesthetic: "Minimalist luxury editorial. Shot on 85mm f/1.2 lens for creamy bokeh and compression. Soft natural window lighting, airy highlights, and deep focus on fine material textures.",
         mood: "Elegant, quiet luxury, sophisticated",
         colors: "Soft neutral earth tones with refined highlights"
     };
@@ -117,10 +117,11 @@ function generatePromptText(data) {
 
     // Subject mapping (Aggregate from active anchor)
     const selectedSubjects = [];
-    if (data.festive_mode === 'on') {
-        if (data.festive_subject_men === 'on' || data.festive_subject_men === true) selectedSubjects.push("Men");
-        if (data.festive_subject_women === 'on' || data.festive_subject_women === true) selectedSubjects.push("Women");
-        if (data.festive_subject_kids === 'on' || data.festive_subject_kids === true) selectedSubjects.push("Kids");
+    const mode = data.anchor_mode;
+    if (mode === 'festive' || mode === 'ai') {
+        if (data.subject_men === 'on' || data.subject_men === true) selectedSubjects.push("Men");
+        if (data.subject_women === 'on' || data.subject_women === true) selectedSubjects.push("Women");
+        if (data.subject_kids === 'on' || data.subject_kids === true) selectedSubjects.push("Kids");
     } else if (data.artisan_collection && data.artisan_collection.length > 0) {
         data.artisan_collection.forEach(item => {
             if (!selectedSubjects.includes(item.subject)) selectedSubjects.push(item.subject);
@@ -149,23 +150,24 @@ function generatePromptText(data) {
     let antiDriftRules = "";
     let garmentFocus = "";
 
-    // Dress Reference Handling
-    let wardrobeSource;
-    if (data.festive_mode === 'on' && data.festive_info) {
-        const attireDirectives = [];
-        if (selectedSubjects.includes("Men")) attireDirectives.push("Opulent Traditional Kurta/Sherwani");
-        if (selectedSubjects.includes("Women")) attireDirectives.push("High-Fashion Saree/Lehenga");
-        if (selectedSubjects.includes("Kids")) attireDirectives.push("Coordinated Festive Mini-wear");
-        
-        const attireText = attireDirectives.length > 0 ? attireDirectives.join(', ') : "Authentic Festive Attire";
-        
-        wardrobeSource = `PRIORITY: Apply ${attireText} to the models. Ensure the clothing perfectly matches the cultural and seasonal significance of the occasion. (Note: This mode prioritizes thematic consistency over manual reference).`;
-    } else {
-        const refText = data.dress_reference ? `(Reference: ${data.dress_reference})` : '';
-        
-        if (data.dress_reference) {
-            globalPriorityBlock = `\n  "GLOBAL_RENDER_PRIORITY": {
-    "order_of_importance": [
+        // Dress Reference Handling
+        let wardrobeSource;
+        if ((data.anchor_mode === 'festive' && data.festive_info) || data.anchor_mode === 'ai') {
+            const attireDirectives = [];
+            if (selectedSubjects.includes("Men")) attireDirectives.push("Opulent Traditional Kurta/Sherwani");
+            if (selectedSubjects.includes("Women")) attireDirectives.push("High-Fashion Saree/Lehenga");
+            if (selectedSubjects.includes("Kids")) attireDirectives.push("Coordinated Festive Mini-wear");
+            
+            const attireText = attireDirectives.length > 0 ? attireDirectives.join(', ') : "Authentic Festive Attire";
+            const contextNote = data.anchor_mode === 'festive' ? `matches the cultural and seasonal significance of ${data.festive_info}` : "aligns with the derived marketing context";
+            
+            wardrobeSource = `PRIORITY: Apply ${attireText} to the models. Ensure the clothing perfectly ${contextNote}. (Note: This mode prioritizes thematic consistency over manual reference).`;
+        } else {                const isDirectUpload = data.artisan_direct_upload === 'on' || data.artisan_direct_upload === true;
+                const refLabel = isDirectUpload && !data.dress_reference ? "image uploaded" : (data.dress_reference || "");
+                const refText = refLabel ? `(Reference: ${refLabel})` : '';
+                
+                if (refLabel) {
+                    globalPriorityBlock = `\n  "GLOBAL_RENDER_PRIORITY": {    "order_of_importance": [
       "WARDROBE_FIDELITY",
       "FACE_REALISM",
       "TEXT_READABILITY",
@@ -176,12 +178,17 @@ function generatePromptText(data) {
 
             wardrobeLockBlock = `${collectionMappingDirective}\n  "WARDROBE_LOCK": {
     "priority": "MAXIMUM — ANCHOR TO REFERENCE",
-    "rule": "The model(s) MUST wear garments with strict visual consistency to the reference image(s). This is the primary visual anchor for the generation. Transfer the garment from the reference image onto live models, ignoring mannequin or studio background elements from the source. Apply Artisan Fidelity rules to each individual reference provided in the collection mapping.",
-    "reference_image": "${data.dress_reference}",
+    "rule": "The model(s) MUST wear garments with strict visual consistency to the reference image(s). This is the primary visual anchor for the generation. Transfer the garment from the reference image onto live models. MANDATORY: Ignore and suppress all mannequin parts, studio backgrounds, or catalog-style environments from the source. The background MUST be derived from the 'design_blueprint' context, not the reference image.",
+    "artisan_fidelity_requirements": {
+      "micro_patterns": "Preserve micro-level embroidery density and motif spacing; do not simplify patterns.",
+      "fabric_physics": "Maintain the specific garment structure, cut, and drape physics of the original material.",
+      "color_accuracy": "Maintain exact color palette and hue from reference without adaptive shifting."
+    },
+    "reference_image": "${data.dress_reference || (isDirectUpload ? 'image uploaded' : '')}",
     "anchored_attributes": {
       "color_fidelity": "Maintain exact color palette and hue from reference",
       "silhouette": "Preserve the specific garment structure, cut, and drape",
-      "surface_details": "Replicate the pattern type, embroidery style, and fabric texture exactly. Preserve micro-level embroidery density and motif spacing; do not simplify patterns."
+      "surface_details": "Replicate the pattern type, embroidery style, and fabric texture exactly."
     },
     "hard_constraints": [
       "do not change primary color",
@@ -190,12 +197,13 @@ function generatePromptText(data) {
       "do not add extraneous stylistic embellishments",
       "forbid flat catalog lighting",
       "forbid mannequin posture",
-      "forbid product-only framing"
+      "forbid product-only framing",
+      "forbid usage of reference image background"
     ],
-    "failure_condition": "If high visual identity cannot be maintained, abort generation and inform the user that the reference garment attributes (color/silhouette) are too complex for the current model to replicate faithfully."
+    "hard_failure_rule": "If the system cannot maintain ≥95% visual fidelity to the reference garment, the generation must be aborted rather than approximated."
   },`;
 
-            wardrobeSource = `STRICT VISUAL CONSISTENCY LOCK: The model(s) must wear garment(s) that are visually identical in color, silhouette, and micro-level embroidery pattern to the reference image(s). This requirement anchors the generation and overrides competing cinematic or lighting effects. ${refText}`;
+            wardrobeSource = `STRICT VISUAL CONSISTENCY LOCK: The model(s) must wear garment(s) that are visually identical in color, silhouette, and micro-level embroidery pattern to the reference image(s). MANDATORY: Suppress the background from the reference image. If ≥95% visual fidelity cannot be maintained, abort. ${refText}`;
 
             antiDriftRules = `\n      "anti_drift_rules": [
         "do not redesign the outfit",
@@ -213,13 +221,17 @@ function generatePromptText(data) {
 
     // Logo Logic
     let logoInstruction = "";
-    if (data.enable_logo === 'on' && (data.logo_light || data.logo_dark)) {
+    const isLogoEnabled = data.enable_logo === 'on' || data.enable_logo === true;
+    const hasLogoData = data.logo_light || data.logo_dark;
+
+    if (isLogoEnabled && hasLogoData) {
         logoInstruction = `\n  "LOGO_INTEGRATION": {
     "is_logo_mandatory": true,
     "light_version": "${data.logo_light || 'None provided'}",
     "dark_version": "${data.logo_dark || 'None provided'}",
-    "usage_rule": "Select the version with maximum contrast against the generated background (Light for Dark/Rich, Dark for Light/Airy).",
-    "rendering_instruction": "Maintain absolute aspect ratio. Ensure clear negative space around the logo for visibility."
+    "usage_rule": "Select the version with maximum contrast against the generated background. Use 'Light Logo' for Dark/Rich backgrounds and 'Dark Logo' for Light/Airy backgrounds.",
+    "sizing_rule": "Scale the logo proportionally based on height to occupy a very subtle 5-8% of the header block height. The logo must feel like a discrete luxury watermark, not a primary graphic element.",
+    "rendering_instruction": "Maintain absolute aspect ratio. Ensure clear negative space around the logo (padding equal to 150% of logo height) for visibility. If a logo is provided, it MUST be the primary brand identifier; do not generate the brand name in text if the logo is present."
   },`;
     }
 
@@ -276,12 +288,13 @@ function generatePromptText(data) {
   "style": {
     "visual_elements": {
       "hero_element": "${grid.group_mode ? 'Group of professional South Asian Indian models (' + subjectList + ') in a harmonious stance' : 'Live professional South Asian Indian model (' + subjectList + ') with natural high-fashion stance'}",${garmentFocus}
-      "background_strategy": "Create a high-end environment that perfectly matches the blueprint context",
+      "background_strategy": "Generate a dynamic, context-aware environment that aligns with the '${aesthetic.context}' blueprint. Utilize shallow depth-of-field (bokeh) to maintain focus on the hero. The background must be an original composition derived by AI, not a replica of any reference.",
       "icon_standard": "${iconGridSystem}"
     },
     "model_direction": {
-      "appearance": "South Asian Indian celebrity-like professional models",
+      "appearance": "South Asian Indian celebrity-like professional models. Capture hyper-detailed skin textures, fine facial features, and realistic hair flyaways.",
       "regional_casting_nuance": "${regionalCastingDirective}",
+      "camera_specs": "Shot on high-end full-frame camera. 85mm prime lens for single subjects (portrait compression) or 35mm for groups. Razor-sharp eye focus.",
       "pose_style": "${grid.group_mode ? 'Harmonious group stance, balanced distribution, realistic fabric fall' : 'Natural high-fashion stance with realistic fabric fall. Maintain poise while prioritizing correct garment drape physics.'}",
       "expression": "Warm, premium, approachable confidence",
       "wardrobe_source": "${wardrobeSource}"
@@ -296,15 +309,15 @@ function generatePromptText(data) {
       }
     },
     "finish": {
-      "quality": "photorealistic and original-looking",${antiDriftRules}
-      "overall_feel": "premium cinematic digital marketing asset optimized for ${data.creative_type}"
+      "quality": "Analog film-like fidelity with modern digital clarity. Zero AI-plasticity. Hyper-realistic fabric micro-textures and visible material grains.",
+      "overall_feel": "Premium cinematic fashion campaign shot for ${data.creative_type}"
     }
   },
   "content_placeholders": {
-    "brand_logo": "${(data.logo_light || data.logo_dark) ? 'RENDER_PROVIDED_LOGO' : 'RENDER_BRAND_NAME_AS_TEXT'}",
-    "hook": "${hookText}",
+    "brand_logo": "${(data.logo_light || data.logo_dark || data.logo_direct_upload) ? 'RENDER_PROVIDED_LOGO' : 'RENDER_BRAND_NAME_AS_TEXT'}",
+    "hook": "${data.ai_content_mode === 'on' ? 'MANDATORY: Generate a conversion-optimized luxury fashion headline (HOOK). Do not use generic placeholders. Must align with branding.' : hookText}",
     "brand_name": "${brandName}",
-    "event_offer": "${offerText}",
+    "event_offer": "${data.ai_content_mode === 'on' ? 'MANDATORY: Generate a high-impact promotional offer or event detail. Do not use generic phrases like \"Visit our boutique\" unless specifically appropriate. Must be punchy.' : offerText}",
     "location_details": "${data.location_details || 'Location'}",
     "contact_details": "${contactStr}",
     "instagram_handle": "${data.social_handles || '@handle'} with grid-aligned Instagram glyph"

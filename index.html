@@ -17,7 +17,7 @@
     <div class="container py-4">
         <header class="text-center mb-5 mt-2">
             <h1 class="display-4 fw-bold mb-1">Instapost</h1>
-            <p class="text-muted text-uppercase small tracking-widest fw-semibold">AI Prompt Blueprint Engine</p>
+            <p class="text-muted text-uppercase small tracking-widest fw-semibold">Create prompt for image generators for your favorite posters</p>
         </header>
 
         <main>
@@ -53,24 +53,6 @@
                             <div id="input_festive" class="anchor-input-group">
                                 <label for="festive_info" class="form-label fw-bold">Occasion Name</label>
                                 <input type="text" id="festive_info" name="festive_info" class="form-control form-control-lg rounded-3 py-3" placeholder="e.g. Diwali Celebration">
-                                
-                                <div class="mt-4 border-top pt-3">
-                                    <label class="form-label small fw-bold text-muted text-uppercase d-block mb-3">Festive Target Subject(s)</label>
-                                    <div class="d-flex flex-wrap gap-3">
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" id="festive_subject_women" name="festive_subject_women" checked>
-                                            <label class="form-check-label fw-bold" for="festive_subject_women">Women</label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" id="festive_subject_men" name="festive_subject_men">
-                                            <label class="form-check-label fw-bold" for="festive_subject_men">Men</label>
-                                        </div>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" id="festive_subject_kids" name="festive_subject_kids">
-                                            <label class="form-check-label fw-bold" for="festive_subject_kids">Kids</label>
-                                        </div>
-                                    </div>
-                                </div>
                                 <input type="checkbox" id="festive_mode" name="festive_mode" class="d-none">
                             </div>
 
@@ -100,6 +82,16 @@
                                     <i class="bi bi-plus-lg me-1"></i> Add Another Model
                                 </button>
 
+                                <div class="form-check mt-3 ms-1">
+                                    <input class="form-check-input" type="checkbox" id="artisan_direct_upload" name="artisan_direct_upload">
+                                    <label class="form-check-label small fw-bold text-muted" for="artisan_direct_upload">
+                                        If link fails, I will upload image into the chat
+                                    </label>
+                                    <p class="extra-small text-info mt-2 mb-0 px-0">
+                                        <i class="bi bi-lightbulb-fill me-1"></i><strong>PRO TIP:</strong> Most AIs (Midjourney/DALL-E) support <em>.jpg</em>, <em>.png</em>, or <em>.webp</em>. Please name your files as shown in the placeholders (e.g. <strong>dress_ref_1.jpg</strong>) and upload them in that exact order.
+                                    </p>
+                                </div>
+
                                 <div class="mt-4 border-top pt-3">
                                     <label for="artisan_custom_instructions" class="form-label small fw-bold text-muted text-uppercase d-block mb-3">Custom Styling Directives (Optional)</label>
                                     <textarea id="artisan_custom_instructions" name="artisan_custom_instructions" class="form-control rounded-3 py-3" rows="2" placeholder="e.g., Soft golden hour lighting, cinematic bokeh background, model looking slightly away..."></textarea>
@@ -109,7 +101,26 @@
 
                             <!-- AI Message -->
                             <div id="input_ai" class="anchor-input-group d-none text-center py-2">
-                                <p class="mb-0 text-muted italic small">AI will derive aesthetic context from marketing content.</p>
+                                <p class="mb-3 text-muted italic small">AI will derive aesthetic context from marketing content.</p>
+                            </div>
+
+                            <!-- Shared Target Subjects (for Festive and AI) -->
+                            <div id="target_subjects_container" class="mt-4 border-top pt-3 d-none">
+                                <label class="form-label small fw-bold text-muted text-uppercase d-block mb-3">Target Subject(s)</label>
+                                <div class="d-flex flex-wrap gap-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="subject_women" name="subject_women" checked>
+                                        <label class="form-check-label fw-bold" for="subject_women">Women</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="subject_men" name="subject_men">
+                                        <label class="form-check-label fw-bold" for="subject_men">Men</label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="subject_kids" name="subject_kids">
+                                        <label class="form-check-label fw-bold" for="subject_kids">Kids</label>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -158,36 +169,53 @@
                     <div class="card border-0 shadow-sm rounded-4 action-bar-card bg-white">
                         <div class="card-body p-4">
                             <div class="row g-3">
-                                <div class="col-md-6">
+                                <div class="col-12 col-md-6">
                                     <label for="brand" class="form-label small fw-bold">Brand Name</label>
                                     <input type="text" id="brand" name="brand" class="form-control rounded-3 py-2" placeholder="e.g. Vedah" required>
                                 </div>
-                                <div id="logo_input_container" class="row g-3 p-0 m-0 d-none">
-                                    <div class="col-md-6">
-                                        <input type="text" id="logo_light" name="logo_light" class="form-control rounded-3 py-2 mt-2" placeholder="Light Logo URL">
+                                
+                                <!-- Placeholder for alignment -->
+                                <div class="col-md-6 d-none d-md-block"></div>
+
+                                <div id="logo_input_container" class="row g-3 p-0 m-0 diminished">
+                                    <div class="col-md-6 mt-2">
+                                        <label for="logo_light" class="form-label extra-small fw-bold text-muted text-uppercase mb-1">Light Logo URL</label>
+                                        <input type="text" id="logo_light" name="logo_light" class="form-control rounded-3 py-2" placeholder="URL for dark backgrounds" disabled>
                                     </div>
-                                    <div class="col-md-6">
-                                        <input type="text" id="logo_dark" name="logo_dark" class="form-control rounded-3 py-2 mt-2" placeholder="Dark Logo URL">
+                                    <div class="col-md-6 mt-2">
+                                        <label for="logo_dark" class="form-label extra-small fw-bold text-muted text-uppercase mb-1">Dark Logo URL</label>
+                                        <input type="text" id="logo_dark" name="logo_dark" class="form-control rounded-3 py-2" placeholder="URL for light backgrounds" disabled>
+                                    </div>
+                                    <div class="col-12 mt-2">
+                                        <div class="form-check ms-1">
+                                            <input class="form-check-input" type="checkbox" id="logo_direct_upload" name="logo_direct_upload" disabled>
+                                            <label class="form-check-label small fw-bold text-muted" for="logo_direct_upload">
+                                                If link fails, I will upload logo into the chat
+                                            </label>
+                                            <p class="extra-small text-info mt-2 mb-0 px-0">
+                                                <i class="bi bi-lightbulb-fill me-1"></i><strong>PRO TIP:</strong> If checked, the engine will map these as <em>"light_logo_upload.png"</em> and <em>"dark_logo_upload.png"</em>.
+                                            </p>
+                                        </div>
                                     </div>
                                 </div>
 
-                                <div class="col-md-4">
+                                <div class="col-12 col-lg-4">
                                     <label for="phone" class="form-label small fw-bold">Phone</label>
                                     <input type="text" id="phone" name="phone" class="form-control rounded-3" placeholder="+91...">
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-12 col-lg-4">
                                     <label for="whatsapp" class="form-label small fw-bold">WhatsApp</label>
                                     <input type="tel" id="whatsapp" name="whatsapp" class="form-control rounded-3" placeholder="+91...">
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-12 col-lg-4">
                                     <label for="email" class="form-label small fw-bold">Email</label>
                                     <input type="email" id="email" name="email" class="form-control rounded-3" placeholder="email@brand.com">
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-12 col-md-6">
                                     <label for="location_details" class="form-label small fw-bold">Location (City, State)</label>
                                     <input type="text" id="location_details" name="location_details" class="form-control rounded-3" placeholder="e.g. Thiruvananthapuram, Kerala" required>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-12 col-md-6">
                                     <label for="social_handles" class="form-label small fw-bold">Instagram Handle</label>
                                     <input type="text" id="social_handles" name="social_handles" class="form-control rounded-3" placeholder="@brandhandle">
                                 </div>
@@ -236,7 +264,7 @@
 
             <div class="mt-4 p-3 rounded-4 bg-dark">
                 <div class="d-flex justify-content-between align-items-center mb-3 px-2">
-                    <label for="prompt-output" class="form-label text-white mb-0 small text-uppercase fw-bold tracking-widest">Surgical Blueprint</label>
+                    <label for="prompt-output" class="form-label text-white mb-0 small text-uppercase fw-bold tracking-widest">Presice Blueprint</label>
                     <button id="copy-btn" class="btn btn-sm btn-light rounded-pill px-4 fw-bold" data-bs-toggle="tooltip" data-bs-placement="top" title="Copy to clipboard">
                         <i class="bi bi-clipboard me-1"></i> Copy
                     </button>
