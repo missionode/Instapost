@@ -27,19 +27,27 @@ function toSentenceCase(str) {
 }
 
 function deriveGridStrategy(data) {
-    // 3x3 Grid / Asymmetrical 2-of-3 Column Rule
-    // Decide which column to leave empty (Negative Space) based on Hero focus.
-    // Default: Clear Column 3 (Right) for most asymmetrical designs.
+    // Macro-Grid: 3x3 photographic grid (Rule of Thirds)
+    // Asymmetrical Logic: Utilize 2 columns, leave 1 empty (Negative Space)
+    
+    // Default: Clear Column 3 (Right) to protect Hero focus
     let negativeSpaceAnchor = 3;
     let activeColumns = [1, 2];
 
-    // If we have a dress reference, we might want to clear based on expected detail.
-    // For now, we use a balanced asymmetrical default but provide the structure.
+    // If the content is exceptionally sparse, we could shift to a 1-column anchor, 
+    // but the 2-of-3 rule is our primary premium aesthetic.
+    
     return {
         spatial_rule: "Rule of Thirds / Asymmetrical 2-of-3",
         active_columns: activeColumns,
         negative_space_anchor: negativeSpaceAnchor,
-        grid_logic: "Content utilizes 2 columns; 1 column remains mandatory empty negative space to protect model/garment focus."
+        grid_logic: "Content utilizes exactly 2 columns; 1 column remains mandatory empty negative space to ensure high-fashion editorial breathing room.",
+        micro_grid: {
+            footer: {
+                columns: 3,
+                logic: "Distribute contact details across a 3-column sub-grid. Implement content-aware wrapping for long strings (emails/locations)."
+            }
+        }
     };
 }
 
@@ -187,7 +195,11 @@ function generatePromptText(data) {
       "hero": "${dim.block_heights.hero}",
       "footer": "${dim.block_heights.footer}"
     },
-    "logic": "${grid.grid_logic}"
+    "logic": "${grid.grid_logic}",
+    "micro_grid": {
+      "footer_columns": ${grid.micro_grid.footer.columns},
+      "footer_logic": "${grid.micro_grid.footer.logic}"
+    }
   },
   "design_blueprint": {
     "context": "${aesthetic.context}",
@@ -198,15 +210,17 @@ function generatePromptText(data) {
   "layout_standards": {
     "header_block": {
       "content": "Brand Identity and Attention Hook",
-      "alignment": "Top-aligned, utilize active columns"
+      "alignment": "Top-aligned, utilize exactly 2 columns, leave 1 column empty for visual balance"
     },
     "hero_block": {
       "content": "Primary Model and Garment Focus",
-      "alignment": "Central vertical focus, maintain negative space anchor"
+      "alignment": "Central vertical focus, maintain negative space anchor index ${grid.negative_space_anchor}",
+      "protection": "Ensure hero element remains unobstructed by text or effects"
     },
     "footer_block": {
       "content": "Marketing Offer and Contact Details",
-      "alignment": "Bottom-aligned, utilize sub-grid columns"
+      "alignment": "Bottom-aligned, utilize sub-grid for data points",
+      "wrapping_rules": "Content-aware wrapping: long strings must wrap within column bounds or span maximum 2 columns."
     }
   },
   "style": {

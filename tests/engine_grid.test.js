@@ -44,4 +44,11 @@ describe('Structural Layout & Grid System', () => {
         // Reel should have different block height distribution (to avoid UI)
         expect(prompt).toMatch(/"block_heights"/);
     });
+
+    test('should include micro-grid and wrapping logic in the blueprint', () => {
+        const prompt = engine.generatePromptText(baseData);
+        expect(prompt).toMatch(/"micro_grid"/);
+        expect(prompt).toMatch(/"footer_columns": 3/);
+        expect(prompt).toMatch(/"wrapping_rules": "Content-aware wrapping/);
+    });
 });
