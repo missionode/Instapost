@@ -2,7 +2,7 @@
 
 This plan outlines the steps to add a Custom Styling Directives field to the Artisan mode, allowing for enriched ڈیزائن blueprints.
 
-## Phase 1: Core Implementation [checkpoint: ]
+## Phase 1: Core Implementation [checkpoint: f342446]
 - [x] Task: Add the "Custom Styling Directives" `textarea` to the Artisan card in `index.html`.
 - [x] Task: Update `storage.js` to persist the `artisan_custom_instructions` field.
 - [x] Task: Update `engine.js` to capture and inject `custom_aesthetic_notes` into the design blueprint.

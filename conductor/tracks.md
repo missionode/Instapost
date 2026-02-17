@@ -36,4 +36,8 @@ This file tracks all major tracks for the project. Each track has its own detail
 
 - [x] **Track: Overhaul output format selector into visual tile system**
 *Link: [./archive/format_selector_ui_polish_20260217/](./archive/format_selector_ui_polish_20260217/)*
-\n---\n\n- [ ] **Track: Add custom styling directives to Artisan mode**\n*Link: [./tracks/artisan_custom_instructions_20260217/](./tracks/artisan_custom_instructions_20260217/)*
+
+---
+
+- [x] **Track: Add custom styling directives to Artisan mode**
+*Link: [./tracks/artisan_custom_instructions_20260217/](./tracks/artisan_custom_instructions_20260217/)*
