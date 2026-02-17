@@ -22,4 +22,14 @@ describe('Storage Utilities', () => {
     const data = storage.loadBrandData();
     expect(data).toBeNull();
   });
+
+  test('should persist artisan_custom_instructions', () => {
+    const data = { 
+      brand: 'Test Brand', 
+      artisan_custom_instructions: 'Soft lighting, cinematic'
+    };
+    storage.saveBrandData(data);
+    const saved = storage.loadBrandData();
+    expect(saved.artisan_custom_instructions).toBe('Soft lighting, cinematic');
+  });
 });

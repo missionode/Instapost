@@ -253,7 +253,9 @@ function generatePromptText(data) {
     "context": "${aesthetic.context}",
     "mood": "${aesthetic.mood}",
     "aesthetic_directives": "${aesthetic.aesthetic}",
-    "color_strategy": "${aesthetic.colors}"
+    "color_strategy": "${aesthetic.colors}",
+    "custom_aesthetic_notes": "${data.artisan_custom_instructions || ''}",
+    "note": "Custom aesthetic notes are supplementary enrichment and MUST NOT override WARDROBE_LOCK or micro-level embroidery protection."
   },
   "layout_standards": {
     "header_block": {

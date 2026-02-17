@@ -84,6 +84,18 @@ describe('index.html form elements', () => {
     expect(document.getElementById('mode_ai')).toBeTruthy();
   });
 
+  test('should have a "Custom Styling Directives" textarea in the Artisan card', () => {
+    const artisanCard = document.getElementById('input_artisan');
+    const textarea = artisanCard.querySelector('[name="artisan_custom_instructions"]');
+    expect(textarea).toBeTruthy();
+    expect(textarea.tagName.toLowerCase()).toBe('textarea');
+    expect(textarea.placeholder).toContain('Soft golden hour lighting');
+    
+    // Check if it's part of the form elements
+    const form = document.getElementById('instapost-form');
+    expect(form.elements['artisan_custom_instructions']).toBeTruthy();
+  });
+
   test('should have corresponding anchor input containers', () => {
     expect(document.getElementById('input_festive')).toBeTruthy();
     expect(document.getElementById('input_artisan')).toBeTruthy();

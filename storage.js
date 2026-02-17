@@ -13,6 +13,7 @@ function saveBrandData(data) {
         logo_light: data.logo_light,
         enable_logo: data.enable_logo,
         anchor_mode: data.anchor_mode,
+        artisan_custom_instructions: data.artisan_custom_instructions,
         // Only persist Festive subjects
         festive_subject_men: data.festive_subject_men,
         festive_subject_women: data.festive_subject_women,
