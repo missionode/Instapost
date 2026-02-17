@@ -13,97 +13,91 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link href="style.css" rel="stylesheet">
     <style>
+        :root {
+            --primary-gradient: linear-gradient(45deg, #0d6efd, #00d2ff);
+            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9fa;
+            color: #212529;
+        }
+        h1, h2, h3, h4, h5, .brand-font {
+            font-family: 'Cinzel', serif;
+        }
         .btn-check:checked + .btn-outline-primary {
-            background: linear-gradient(45deg, #0d6efd, #00d2ff);
+            background: var(--primary-gradient);
             border-color: transparent;
             color: white;
             box-shadow: 0 4px 15px rgba(13, 110, 253, 0.3);
         }
+        .btn-check:checked + .btn-outline-secondary {
+            background: #6c757d;
+            color: white;
+        }
         .mode-card {
-            transition: all 0.3s ease;
-            border: 2px solid transparent;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            border: 1px solid rgba(0,0,0,0.08) !important;
         }
-        .mode-card.active {
+        .form-control:focus, .form-select:focus {
+            box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.1);
             border-color: #0d6efd;
-            background-color: rgba(13, 110, 253, 0.02);
         }
-        .artisan-row {
-            animation: slideDown 0.3s ease-out;
-        }
-        @keyframes slideDown {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
+        .rounded-4 { border-radius: 1rem !important; }
+        .rounded-5 { border-radius: 1.5rem !important; }
+        
+        @media (max-width: 768px) {
+            .display-4 { font-size: 2.5rem; }
+            .btn-lg { width: 100%; }
+            .container { padding-left: 1.25rem; padding-right: 1.25rem; }
         }
     </style>
 </head>
 <body>
     <div class="container py-4">
-        <header class="text-center mb-5">
-            <h1 class="display-4 fw-bold">Instapost</h1>
-            <p class="lead">AI Prompt Generator for Luxury Instagram Posters</p>
+        <header class="text-center mb-5 mt-3">
+            <h1 class="display-4 fw-bold mb-2">Instapost</h1>
+            <p class="text-muted text-uppercase small tracking-widest brand-font">Production-Grade AI Blueprint Engine</p>
         </header>
 
         <main>
             <form id="instapost-form">
-                <!-- Section 1: Form Format Selection -->
-                <div class="row g-3 mb-4">
-                    <div class="col-md-12">
-                        <label class="form-label d-block fw-bold small text-muted text-uppercase">1. Creative Format</label>
-                        <div class="btn-group w-100" role="group" aria-label="Creative Type Selection">
-                            <input type="radio" class="btn-check" name="creative_type" id="type_post" value="Square Post" checked>
-                            <label class="btn btn-outline-secondary py-3" for="type_post">
-                                <i class="bi bi-square me-2"></i>Square (1:1)
-                            </label>
-
-                            <input type="radio" class="btn-check" name="creative_type" id="type_portrait" value="Portrait Post">
-                            <label class="btn btn-outline-secondary py-3" for="type_portrait">
-                                <i class="bi bi-rectangle me-2"></i>Portrait (4:5)
-                            </label>
-
-                            <input type="radio" class="btn-check" name="creative_type" id="type_reel" value="Reel/Story">
-                            <label class="btn btn-outline-secondary py-3" for="type_reel">
-                                <i class="bi bi-phone me-2"></i>Reel/Story (9:16)
-                            </label>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Section 2: Choose Your Primary Anchor -->
-                <div class="mb-4">
-                    <label class="form-label fw-bold small text-muted text-uppercase mb-3">2. Select Your Design Anchor (Surgical Focus)</label>
+                <!-- Section 1: Choose Your Primary Anchor -->
+                <div class="mb-5">
+                    <label class="form-label fw-bold small text-muted text-uppercase mb-3 px-1">1. Select Design Anchor (Strategic Precision)</label>
                     
-                    <div class="row g-3 mb-3">
-                        <div class="col-md-4">
+                    <div class="row g-2 mb-3">
+                        <div class="col-4">
                             <input type="radio" class="btn-check" name="anchor_mode" id="mode_festive" value="festive" checked>
-                            <label class="btn btn-outline-primary w-100 py-3 rounded-4 fw-bold" for="mode_festive">
-                                <i class="bi bi-stars me-2"></i>Festive Special
+                            <label class="btn btn-outline-primary w-100 py-3 rounded-4 fw-bold border-2 d-flex flex-column align-items-center justify-content-center" for="mode_festive">
+                                <i class="bi bi-stars mb-1 fs-4"></i><span class="small">Festive</span>
                             </label>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-4">
                             <input type="radio" class="btn-check" name="anchor_mode" id="mode_artisan" value="artisan">
-                            <label class="btn btn-outline-primary w-100 py-3 rounded-4 fw-bold" for="mode_artisan">
-                                <i class="bi bi-shield-lock me-2"></i>Artisan Dress
+                            <label class="btn btn-outline-primary w-100 py-3 rounded-4 fw-bold border-2 d-flex flex-column align-items-center justify-content-center" for="mode_artisan">
+                                <i class="bi bi-shield-lock mb-1 fs-4"></i><span class="small">Artisan</span>
                             </label>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-4">
                             <input type="radio" class="btn-check" name="anchor_mode" id="mode_ai" value="ai">
-                            <label class="btn btn-outline-primary w-100 py-3 rounded-4 fw-bold" for="mode_ai">
-                                <i class="bi bi-robot me-2"></i>AI's Choice
+                            <label class="btn btn-outline-primary w-100 py-3 rounded-4 fw-bold border-2 d-flex flex-column align-items-center justify-content-center" for="mode_ai">
+                                <i class="bi bi-robot mb-1 fs-4"></i><span class="small">Auto</span>
                             </label>
                         </div>
                     </div>
 
-                    <div class="card border-0 shadow-sm rounded-4 mode-card active" id="anchor-input-card">
+                    <div class="card border-0 shadow-sm rounded-4 mode-card bg-white" id="anchor-input-card">
                         <div class="card-body p-4">
                             <!-- Festive Input Pane -->
                             <div id="input_festive" class="anchor-input-group">
                                 <label for="festive_info" class="form-label fw-bold">Occasion Name</label>
-                                <input type="text" id="festive_info" name="festive_info" class="form-control form-control-lg border-0 bg-light rounded-3" placeholder="e.g. Diwali Celebration, Summer Sale 2026">
+                                <input type="text" id="festive_info" name="festive_info" class="form-control form-control-lg border-0 bg-light rounded-3 px-3 py-3" placeholder="e.g. Diwali Celebration">
                                 
                                 <!-- Festive Subject Selection -->
                                 <div class="mt-4 border-top pt-3">
                                     <label class="form-label small fw-bold text-muted text-uppercase d-block mb-3">Festive Target Subject(s)</label>
-                                    <div class="d-flex flex-wrap gap-4">
+                                    <div class="d-flex flex-wrap gap-3">
                                         <div class="form-check">
                                             <input class="form-check-input" type="checkbox" id="festive_subject_women" name="festive_subject_women" checked>
                                             <label class="form-check-label fw-bold" for="festive_subject_women">Women</label>
@@ -118,10 +112,6 @@
                                         </div>
                                     </div>
                                 </div>
-
-                                <div class="form-text mt-3 text-primary">
-                                    <i class="bi bi-info-circle"></i> AI will prioritize cultural authenticity and seasonal decor.
-                                </div>
                                 <input type="checkbox" id="festive_mode" name="festive_mode" class="d-none">
                             </div>
 
@@ -129,150 +119,168 @@
                             <div id="input_artisan" class="anchor-input-group d-none">
                                 <label class="form-label fw-bold mb-3">Dress Collection Mapping</label>
                                 <div id="artisan-collection-container">
-                                    <!-- Dynamic rows will appear here -->
                                     <div class="artisan-row row g-2 mb-3 align-items-center">
-                                        <div class="col-md-7">
-                                            <input type="text" class="form-control border-0 bg-light artisan-url" placeholder="Paste dress image URL">
+                                        <div class="col-12 col-md-7">
+                                            <input type="text" class="form-control border-0 bg-light artisan-url rounded-3 px-3 py-2" placeholder="Paste image URL">
                                         </div>
-                                        <div class="col-md-4">
-                                            <select class="form-select border-0 bg-light artisan-subject">
+                                        <div class="col-10 col-md-4">
+                                            <select class="form-select border-0 bg-light artisan-subject rounded-3">
                                                 <option value="Women" selected>Women's Wear</option>
                                                 <option value="Men">Men's Wear</option>
                                                 <option value="Kids">Kids' Wear</option>
                                             </select>
                                         </div>
-                                        <div class="col-md-1 text-end">
-                                            <button type="button" class="btn btn-link text-danger p-0 remove-artisan-row d-none" title="Remove model">
-                                                <i class="bi bi-x-circle-fill fs-5"></i>
+                                        <div class="col-2 col-md-1 text-end">
+                                            <button type="button" class="btn btn-link text-danger p-0 remove-artisan-row d-none" title="Remove">
+                                                <i class="bi bi-x-circle-fill fs-4"></i>
                                             </button>
                                         </div>
                                     </div>
                                 </div>
-                                <button type="button" id="add-artisan-row" class="btn btn-sm btn-outline-primary mt-2 rounded-pill px-3">
+                                <button type="button" id="add-artisan-row" class="btn btn-sm btn-outline-primary mt-2 rounded-pill px-4">
                                     <i class="bi bi-plus-lg me-1"></i> Add Another Model
                                 </button>
-                                
-                                <div class="form-text mt-3 text-success fw-bold">
-                                    <i class="bi bi-shield-lock-fill"></i> Artisan Fidelity Active: Pair specific URLs with target models for 1:1 precision.
-                                </div>
                             </div>
 
                             <!-- AI Message -->
                             <div id="input_ai" class="anchor-input-group d-none text-center py-2">
-                                <p class="mb-0 text-muted italic">AI will automatically derive the visual style from your brand and marketing content below.</p>
+                                <p class="mb-0 text-muted italic small">AI will derive aesthetic context from marketing content.</p>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Section 3: Marketing Content (Persistent) -->
-                <div class="card border-0 shadow-sm rounded-4 mb-4">
+                <!-- Section 2: Marketing Content (Persistent) -->
+                <div class="card border-0 shadow-sm rounded-4 mb-5 bg-white">
                     <div class="card-body p-4">
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                            <label class="form-label fw-bold small text-muted text-uppercase mb-0">3. Marketing Message</label>
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <label class="form-label fw-bold small text-muted text-uppercase mb-0 px-1">2. Marketing Message</label>
                             <div class="form-check form-switch">
                                 <input class="form-check-input" type="checkbox" id="ai_content_mode" name="ai_content_mode">
-                                <label class="form-check-label small fw-bold" for="ai_content_mode">Let AI Write Headlines</label>
+                                <label class="form-check-label small fw-bold" for="ai_content_mode">AI Copywriting</label>
                             </div>
                         </div>
                         
                         <div id="manual_content_fields" class="row g-3">
                             <div class="col-md-12">
-                                <label for="hook" class="form-label small fw-bold">Primary Attention Hook</label>
-                                <input type="text" id="hook" name="hook" class="form-control border-0 bg-light" placeholder="e.g. UNVEILING THE ROYAL ELEGANCE">
+                                <label for="hook" class="form-label small fw-bold px-1">Attention Hook</label>
+                                <input type="text" id="hook" name="hook" class="form-control border-0 bg-light rounded-3 px-3 py-3" placeholder="e.g. UNVEILING ROYAL ELEGANCE">
                             </div>
                             <div class="col-md-12">
-                                <label for="event_offer" class="form-label small fw-bold">Event / Offer Details</label>
-                                <textarea id="event_offer" name="event_offer" class="form-control border-0 bg-light" rows="2" placeholder="e.g. EXCLUSIVE 30% OFF | LIMITED TIME ONLY"></textarea>
+                                <label for="event_offer" class="form-label small fw-bold px-1">Event / Offer Details</label>
+                                <textarea id="event_offer" name="event_offer" class="form-control border-0 bg-light rounded-3 px-3 py-3" rows="2" placeholder="e.g. EXCLUSIVE 30% OFF | LIMITED TIME"></textarea>
                             </div>
                         </div>
                         
                         <div id="ai_content_note" class="d-none mt-2">
-                            <div class="alert alert-info py-2 small mb-0 border-0 bg-info-subtle">
-                                <i class="bi bi-magic me-2"></i>High-conversion headlines will be auto-generated.
+                            <div class="alert alert-info py-2 small mb-0 border-0 bg-primary-subtle text-primary fw-bold rounded-3">
+                                <i class="bi bi-magic me-2"></i>AI will generate conversion-optimized headlines.
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Section 4: Brand & Contact (Persistent) -->
-                <div class="row g-3 mt-2">
-                    <div class="col-md-12">
-                        <h5 class="mb-3 text-uppercase small fw-bold text-muted">4. Brand & Contact Details</h5>
-                    </div>
-                    <div class="col-md-6">
-                        <label for="brand" class="form-label fw-bold small">Brand Name</label>
-                        <input type="text" id="brand" name="brand" class="form-control border-0 bg-light" placeholder="e.g. Vedah" required>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-check form-switch mt-md-4">
-                            <input class="form-check-input" type="checkbox" id="enable_logo" name="enable_logo">
-                            <label class="form-check-label fw-bold small" for="enable_logo">Enable Logo Integration</label>
-                        </div>
-                    </div>
+                <!-- Section 3: Brand & Contact -->
+                <div class="card border-0 shadow-sm rounded-4 mb-5 bg-white">
+                    <div class="card-body p-4">
+                        <h5 class="form-label fw-bold small text-muted text-uppercase mb-4 px-1">3. Brand & Contact</h5>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="brand" class="form-label small fw-bold px-1">Brand Name</label>
+                                <input type="text" id="brand" name="brand" class="form-control border-0 bg-light rounded-3 px-3 py-2" placeholder="e.g. Vedah" required>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-check form-switch mt-md-4">
+                                    <input class="form-check-input" type="checkbox" id="enable_logo" name="enable_logo">
+                                    <label class="form-check-label fw-bold small" for="enable_logo">Logo Integration (Beta)</label>
+                                </div>
+                            </div>
 
-                    <div id="logo_input_container" class="row g-3 p-0 m-0 d-none">
-                        <div class="col-md-6">
-                            <label for="logo_light" class="form-label small fw-bold">Light Logo URL</label>
-                            <input type="text" id="logo_light" name="logo_light" class="form-control border-0 bg-light" placeholder="URL of Light Logo">
-                        </div>
-                        <div class="col-md-6">
-                            <label for="logo_dark" class="form-label small fw-bold">Dark Logo URL</label>
-                            <input type="text" id="logo_dark" name="logo_dark" class="form-control border-0 bg-light" placeholder="URL of Dark Logo">
-                        </div>
-                    </div>
+                            <div id="logo_input_container" class="row g-3 p-0 m-0 d-none">
+                                <div class="col-md-6">
+                                    <input type="text" id="logo_light" name="logo_light" class="form-control border-0 bg-light rounded-3 px-3 py-2 mb-2" placeholder="Light Logo URL">
+                                </div>
+                                <div class="col-md-6">
+                                    <input type="text" id="logo_dark" name="logo_dark" class="form-control border-0 bg-light rounded-3 px-3 py-2 mb-2" placeholder="Dark Logo URL">
+                                </div>
+                            </div>
 
-                    <div class="col-md-4">
-                        <label for="phone" class="form-label small fw-bold">Phone</label>
-                        <input type="text" id="phone" name="phone" class="form-control border-0 bg-light" placeholder="+91...">
-                    </div>
-                    <div class="col-md-4">
-                        <label for="whatsapp" class="form-label small fw-bold">WhatsApp</label>
-                        <input type="tel" id="whatsapp" name="whatsapp" class="form-control border-0 bg-light" placeholder="+91...">
-                    </div>
-                    <div class="col-md-4">
-                        <label for="email" class="form-label small fw-bold">Email</label>
-                        <input type="email" id="email" name="email" class="form-control border-0 bg-light" placeholder="email@brand.com">
-                    </div>
-                    <div class="col-md-6">
-                        <label for="location_details" class="form-label small fw-bold">Location (City, State)</label>
-                        <input type="text" id="location_details" name="location_details" class="form-control border-0 bg-light" placeholder="e.g. Thiruvananthapuram, Kerala" required>
-                    </div>
-                    <div class="col-md-6">
-                        <label for="social_handles" class="form-label small fw-bold">Instagram Handle</label>
-                        <input type="text" id="social_handles" name="social_handles" class="form-control border-0 bg-light" placeholder="@brandhandle">
+                            <div class="col-md-4">
+                                <label for="phone" class="form-label small fw-bold px-1">Phone</label>
+                                <input type="text" id="phone" name="phone" class="form-control border-0 bg-light rounded-3 px-3" placeholder="+91...">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="whatsapp" class="form-label small fw-bold px-1">WhatsApp</label>
+                                <input type="tel" id="whatsapp" name="whatsapp" class="form-control border-0 bg-light rounded-3 px-3" placeholder="+91...">
+                            </div>
+                            <div class="col-md-4">
+                                <label for="email" class="form-label small fw-bold px-1">Email</label>
+                                <input type="email" id="email" name="email" class="form-control border-0 bg-light rounded-3 px-3" placeholder="email@brand.com">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="location_details" class="form-label small fw-bold px-1">Location (City, State)</label>
+                                <input type="text" id="location_details" name="location_details" class="form-control border-0 bg-light rounded-3 px-3" placeholder="e.g. Thiruvananthapuram, Kerala" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="social_handles" class="form-label small fw-bold px-1">Instagram Handle</label>
+                                <input type="text" id="social_handles" name="social_handles" class="form-control border-0 bg-light rounded-3 px-3" placeholder="@brandhandle">
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <div class="col-12 mt-5 text-center">
-                    <button type="button" id="generate-btn" class="btn btn-primary btn-lg px-5 rounded-pill shadow-lg border-0" style="background: linear-gradient(45deg, #0d6efd, #00d2ff);">
-                        <i class="bi bi-magic me-2"></i>Generate Production Blueprint
+                <!-- Section 4: Creative Format (Moved Down) -->
+                <div class="row g-3 mb-5">
+                    <div class="col-md-12 text-center">
+                        <label class="form-label d-block fw-bold small text-muted text-uppercase mb-3">4. Select Output Format</label>
+                        <div class="btn-group w-100" role="group">
+                            <input type="radio" class="btn-check" name="creative_type" id="type_post" value="Square Post" checked>
+                            <label class="btn btn-outline-secondary py-3 px-2" for="type_post">
+                                <i class="bi bi-square me-1"></i><span class="small fw-bold">1:1</span>
+                            </label>
+
+                            <input type="radio" class="btn-check" name="creative_type" id="type_portrait" value="Portrait Post">
+                            <label class="btn btn-outline-secondary py-3 px-2" for="type_portrait">
+                                <i class="bi bi-rectangle me-1"></i><span class="small fw-bold">4:5</span>
+                            </label>
+
+                            <input type="radio" class="btn-check" name="creative_type" id="type_reel" value="Reel/Story">
+                            <label class="btn btn-outline-secondary py-3 px-2" for="type_reel">
+                                <i class="bi bi-phone me-1"></i><span class="small fw-bold">9:16</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-12 text-center">
+                    <button type="button" id="generate-btn" class="btn btn-primary btn-lg py-3 px-5 rounded-pill shadow-lg border-0 fw-bold" style="background: var(--primary-gradient);">
+                        <i class="bi bi-magic me-2"></i>Generate Prompt Blueprint
                     </button>
                 </div>
             </form>
 
             <div class="mt-5 p-3 rounded-4 bg-dark shadow-lg">
-                <div class="d-flex justify-content-between align-items-center mb-2 px-1">
-                    <label for="prompt-output" class="form-label text-white mb-0 small text-uppercase fw-bold">Generated Prompt Blueprint</label>
-                    <button id="copy-btn" class="btn btn-sm btn-light rounded-pill px-3" data-bs-toggle="tooltip" data-bs-placement="top" title="Copy to clipboard">
+                <div class="d-flex justify-content-between align-items-center mb-3 px-2">
+                    <label for="prompt-output" class="form-label text-white mb-0 small text-uppercase fw-bold brand-font tracking-widest">Surgical Blueprint</label>
+                    <button id="copy-btn" class="btn btn-sm btn-light rounded-pill px-4 fw-bold" data-bs-toggle="tooltip" data-bs-placement="top" title="Copy to clipboard">
                         <i class="bi bi-clipboard me-1"></i> Copy
                     </button>
                 </div>
-                <textarea id="prompt-output" class="form-control bg-dark text-success border-secondary rounded-3" rows="12" readonly placeholder="Your surgical blueprint will appear here..."></textarea>
+                <textarea id="prompt-output" class="form-control bg-dark text-success border-0 rounded-3 small p-3" rows="12" readonly style="font-family: 'Courier New', monospace; font-size: 0.85rem;" placeholder="Your surgical blueprint will appear here..."></textarea>
             </div>
         </main>
 
-        <footer class="mt-5 pb-4 border-top pt-4">
+        <footer class="mt-5 pb-5 pt-4">
             <div class="row align-items-center g-3">
                 <div class="col-md-6 text-center text-md-start">
-                    <p class="text-muted small mb-0">&copy; 2026 Instapost Core. Production-Grade Engine.</p>
+                    <p class="text-muted extra-small mb-0">&copy; 2026 Instapost Core. All rights reserved.</p>
                 </div>
                 <div class="col-md-6 text-center text-md-end">
-                    <button id="download-db-btn" class="btn btn-sm btn-outline-secondary me-2 px-3 rounded-pill">
-                        <i class="bi bi-download me-1"></i> Export
+                    <button id="download-db-btn" class="btn btn-sm btn-link text-muted text-decoration-none me-3 extra-small">
+                        <i class="bi bi-download me-1"></i>Export
                     </button>
-                    <button id="upload-db-btn" class="btn btn-sm btn-outline-secondary px-3 rounded-pill">
-                        <i class="bi bi-upload me-1"></i> Import
+                    <button id="upload-db-btn" class="btn btn-sm btn-link text-muted text-decoration-none extra-small">
+                        <i class="bi bi-upload me-1"></i>Import
                     </button>
                 </div>
             </div>
