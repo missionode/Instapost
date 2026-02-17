@@ -7,6 +7,7 @@ Key Features:
 - **Horizontal Action Bars:** Strategic placement of engine toggles (AI Copy, Logo) for better accessibility and reachability on mobile devices.
 - **Visual Format Tiles:** An intuitive, 3-column grid system for selecting output formats (Square, Portrait, Reel), complete with platform-specific icons and aspect ratio subtitles.
 - **Artisan Collection Builder:** A dynamic row-based interface for Artisan mode that allows users to explicitly pair garment URLs with specific model categories.
+- **Artisan Custom Styling:** A dedicated field for supplemental aesthetic or compositional directives (e.g., lighting, bokeh) that enrich the AI blueprint while respecting core wardrobe locks.
 - **Advanced Contextual Engine:**
     - **Semantic Blueprinting:** Generates descriptive "Design Blueprints" for production-grade AI.
     - **Artisan Fidelity (9.5+ Score):** Advanced micro-level embroidery protection and mannequin suppression.
