@@ -82,12 +82,12 @@ describe('index.html form elements', () => {
     expect(document.getElementById('aestheticTab')).toBeTruthy();
     expect(document.getElementById('festive-tab')).toBeTruthy();
     expect(document.getElementById('url-tab')).toBeTruthy();
-    expect(document.getElementById('content-tab')).toBeTruthy();
+    expect(document.getElementById('ai-tab')).toBeTruthy();
   });
 
   test('should have corresponding tab panes', () => {
     expect(document.getElementById('festive-pane')).toBeTruthy();
     expect(document.getElementById('url-pane')).toBeTruthy();
-    expect(document.getElementById('content-pane')).toBeTruthy();
+    expect(document.getElementById('ai-pane')).toBeTruthy();
   });
 });

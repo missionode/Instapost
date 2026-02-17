@@ -22,7 +22,7 @@
 
         <main>
             <form id="instapost-form">
-                <!-- Section 1: Format & Mode -->
+                <!-- Section 1: Form Format Selection -->
                 <div class="row g-3 mb-4">
                     <div class="col-md-12">
                         <label class="form-label d-block fw-bold">1. Creative Type</label>
@@ -41,23 +41,24 @@
                     </div>
                 </div>
 
-                <!-- Section 2: Aesthetic Selection Tabs -->
+                <!-- Section 2: Choose Your Primary Anchor -->
+                <label class="form-label fw-bold mb-2">2. Select Your Primary Design Anchor</label>
                 <div class="card border-0 shadow-sm rounded-4 mb-4 overflow-hidden">
                     <div class="card-header bg-light border-0 p-0">
                         <ul class="nav nav-tabs nav-fill border-0" id="aestheticTab" role="tablist">
                             <li class="nav-item" role="presentation">
                                 <button class="nav-link py-3 active fw-bold" id="festive-tab" data-bs-toggle="tab" data-bs-target="#festive-pane" type="button" role="tab" aria-controls="festive-pane" aria-selected="true">
-                                    <i class="bi bi-stars me-2"></i>Festive Vibes
+                                    <i class="bi bi-stars me-2"></i>1. Festive Spotlight
                                 </button>
                             </li>
                             <li class="nav-item" role="presentation">
                                 <button class="nav-link py-3 fw-bold" id="url-tab" data-bs-toggle="tab" data-bs-target="#url-pane" type="button" role="tab" aria-controls="url-pane" aria-selected="false">
-                                    <i class="bi bi-link-45deg me-2"></i>Dress Reference
+                                    <i class="bi bi-link-45deg me-2"></i>2. Artisan Spotlight (The Dress)
                                 </button>
                             </li>
                             <li class="nav-item" role="presentation">
-                                <button class="nav-link py-3 fw-bold" id="content-tab" data-bs-toggle="tab" data-bs-target="#content-pane" type="button" role="tab" aria-controls="content-pane" aria-selected="false">
-                                    <i class="bi bi-chat-left-text me-2"></i>Content Mode
+                                <button class="nav-link py-3 fw-bold" id="ai-tab" data-bs-toggle="tab" data-bs-target="#ai-pane" type="button" role="tab" aria-controls="ai-pane" aria-selected="false">
+                                    <i class="bi bi-robot me-2"></i>3. AI's Choice (Full Auto)
                                 </button>
                             </li>
                         </ul>
@@ -68,11 +69,10 @@
                             <div class="tab-pane fade show active" id="festive-pane" role="tabpanel" aria-labelledby="festive-tab" tabindex="0">
                                 <div class="col-md-12">
                                     <label for="festive_info" class="form-label fw-bold">Festival/Season Information</label>
-                                    <input type="text" id="festive_info" name="festive_info" class="form-control form-control-lg" placeholder="e.g. Diwali, Christmas, Summer Sale, Eid">
+                                    <input type="text" id="festive_info" name="festive_info" class="form-control form-control-lg" placeholder="e.g. Diwali Special, Christmas Collection, Eid 2026">
                                     <div class="form-text mt-3">
-                                        <i class="bi bi-info-circle"></i> This mode prioritizes thematic consistency and cultural vibes for maximum visual impact.
+                                        <i class="bi bi-info-circle text-primary"></i> <strong>Vibe Focus:</strong> AI will generate clothing and decor that matches the authentic cultural significance of the occasion.
                                     </div>
-                                    <!-- Hidden toggle for engine compatibility -->
                                     <input type="checkbox" id="festive_mode" name="festive_mode" class="d-none">
                                 </div>
                             </div>
@@ -82,50 +82,57 @@
                                 <div class="col-md-12">
                                     <label for="dress_reference" class="form-label fw-bold">Dress Reference URL/Filename</label>
                                     <input type="text" id="dress_reference" name="dress_reference" class="form-control form-control-lg" 
-                                           placeholder="Paste URL of the specific dress or material" 
-                                           pattern="^(https?:\/\/.*|.*\.(jpg|jpeg|png|webp|gif|bmp))$"
-                                           title="Please enter a valid URL or image filename">
-                                    <div class="form-text mt-3">
-                                        <i class="bi bi-shield-lock-fill text-success"></i> <strong>Artisan Fidelity Active:</strong> The engine will anchor the entire poster's style to this image.
+                                           placeholder="Paste URL of the specific dress or material">
+                                    <div class="form-text mt-3 text-success fw-bold">
+                                        <i class="bi bi-shield-lock-fill"></i> Artisan Fidelity Active: 1:1 garment replication prioritized over environment.
                                     </div>
                                 </div>
                             </div>
 
-                            <!-- Content Pane -->
-                            <div class="tab-pane fade" id="content-pane" role="tabpanel" aria-labelledby="content-tab" tabindex="0">
-                                <div class="row g-3">
-                                    <div class="col-md-12 mb-2 d-flex justify-content-between align-items-center">
-                                        <label class="form-label fw-bold mb-0">Manual Content Generation</label>
-                                        <div class="form-check form-switch">
-                                            <input class="form-check-input" type="checkbox" id="ai_content_mode" name="ai_content_mode">
-                                            <label class="form-check-label small fw-bold" for="ai_content_mode">Use AI Content Mode</label>
-                                        </div>
-                                    </div>
-                                    <div id="manual_content_fields" class="col-12 row g-3 m-0 p-0">
-                                        <div class="col-md-12">
-                                            <label for="hook" class="form-label fw-bold">Primary Hook</label>
-                                            <input type="text" id="hook" name="hook" class="form-control" placeholder="e.g. UNVEILING THE ROYAL ELEGANCE">
-                                        </div>
-                                        <div class="col-md-12">
-                                            <label for="event_offer" class="form-label fw-bold">Event/Offer Details</label>
-                                            <textarea id="event_offer" name="event_offer" class="form-control" rows="2" placeholder="e.g. EXCLUSIVE 30% OFF | DIWALI SPECIAL COLLECTION"></textarea>
-                                        </div>
-                                    </div>
-                                    <div id="ai_content_note" class="col-md-12 d-none">
-                                        <div class="alert alert-info py-2 small mb-0">
-                                            <i class="bi bi-magic"></i> <strong>AI Writing Active:</strong> The AI will generate high-conversion headlines for you.
-                                        </div>
-                                    </div>
+                            <!-- AI Pane -->
+                            <div class="tab-pane fade" id="ai-pane" role="tabpanel" aria-labelledby="ai-tab" tabindex="0">
+                                <div class="alert alert-secondary mb-0">
+                                    <i class="bi bi-magic me-2"></i> <strong>Full Creative Freedom:</strong> The AI will decide the best visual aesthetic based only on your Brand and Marketing Content below.
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Section 3: Brand & Contact (Always Visible) -->
-                <div class="row g-3 mt-4">
+                <!-- Section 3: Marketing Content (Persistent) -->
+                <div class="card border-0 shadow-sm rounded-4 mb-4">
+                    <div class="card-body p-4">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <label class="form-label fw-bold mb-0">3. Marketing Content (The Message)</label>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="ai_content_mode" name="ai_content_mode">
+                                <label class="form-check-label small fw-bold" for="ai_content_mode">Let AI Write Headlines</label>
+                            </div>
+                        </div>
+                        
+                        <div id="manual_content_fields" class="row g-3">
+                            <div class="col-md-12">
+                                <label for="hook" class="form-label small fw-bold text-muted text-uppercase">Primary Attention Hook</label>
+                                <input type="text" id="hook" name="hook" class="form-control" placeholder="e.g. UNVEILING THE ROYAL ELEGANCE">
+                            </div>
+                            <div class="col-md-12">
+                                <label for="event_offer" class="form-label small fw-bold text-muted text-uppercase">Event / Offer Details</label>
+                                <textarea id="event_offer" name="event_offer" class="form-control" rows="2" placeholder="e.g. EXCLUSIVE 30% OFF | LIMITED TIME ONLY"></textarea>
+                            </div>
+                        </div>
+                        
+                        <div id="ai_content_note" class="d-none mt-2">
+                            <div class="alert alert-info py-2 small mb-0">
+                                <i class="bi bi-magic"></i> AI will automatically generate high-conversion headlines for your brand.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 4: Brand & Contact (Persistent) -->
+                <div class="row g-3 mt-2">
                     <div class="col-md-12">
-                        <h5 class="mb-3 text-uppercase small fw-bold text-muted">Brand & Contact Details</h5>
+                        <h5 class="mb-3 text-uppercase small fw-bold text-muted">4. Brand & Contact Details</h5>
                     </div>
                     <div class="col-md-6">
                         <label for="brand" class="form-label fw-bold">Brand Name</label>
@@ -140,47 +147,47 @@
 
                     <div id="logo_input_container" class="row g-3 p-0 m-0 d-none">
                         <div class="col-md-6">
-                            <label for="logo_light" class="form-label">Light Logo (URL)</label>
+                            <label for="logo_light" class="form-label small fw-bold">Light Logo URL</label>
                             <input type="text" id="logo_light" name="logo_light" class="form-control" placeholder="URL of Light Logo">
                         </div>
                         <div class="col-md-6">
-                            <label for="logo_dark" class="form-label">Dark Logo (URL)</label>
+                            <label for="logo_dark" class="form-label small fw-bold">Dark Logo URL</label>
                             <input type="text" id="logo_dark" name="logo_dark" class="form-control" placeholder="URL of Dark Logo">
                         </div>
                     </div>
 
                     <div class="col-md-4">
-                        <label for="phone" class="form-label fw-bold">Phone</label>
+                        <label for="phone" class="form-label small fw-bold">Phone</label>
                         <input type="text" id="phone" name="phone" class="form-control" placeholder="+91...">
                     </div>
                     <div class="col-md-4">
-                        <label for="whatsapp" class="form-label fw-bold">WhatsApp</label>
+                        <label for="whatsapp" class="form-label small fw-bold">WhatsApp</label>
                         <input type="tel" id="whatsapp" name="whatsapp" class="form-control" placeholder="+91...">
                     </div>
                     <div class="col-md-4">
-                        <label for="email" class="form-label fw-bold">Email</label>
+                        <label for="email" class="form-label small fw-bold">Email</label>
                         <input type="email" id="email" name="email" class="form-control" placeholder="email@brand.com">
                     </div>
                     <div class="col-md-6">
-                        <label for="location_details" class="form-label fw-bold">Location Details</label>
+                        <label for="location_details" class="form-label small fw-bold">Location Details</label>
                         <input type="text" id="location_details" name="location_details" class="form-control" placeholder="City, State" required>
                     </div>
                     <div class="col-md-6">
-                        <label for="social_handles" class="form-label fw-bold">Instagram Handle</label>
+                        <label for="social_handles" class="form-label small fw-bold">Instagram Handle</label>
                         <input type="text" id="social_handles" name="social_handles" class="form-control" placeholder="@brandhandle">
                     </div>
                 </div>
 
                 <div class="col-12 mt-5 text-center">
-                    <button type="button" id="generate-btn" class="btn btn-primary btn-lg px-5 rounded-pill shadow-sm">
-                        <i class="bi bi-magic me-2"></i>Generate JSON Prompt
+                    <button type="button" id="generate-btn" class="btn btn-primary btn-lg px-5 rounded-pill shadow-lg border-0" style="background: linear-gradient(45deg, #0d6efd, #00d2ff);">
+                        <i class="bi bi-magic me-2"></i>Generate Production Blueprint
                     </button>
                 </div>
             </form>
 
             <div class="mt-5 p-3 rounded-4 bg-dark shadow-lg">
                 <div class="d-flex justify-content-between align-items-center mb-2 px-1">
-                    <label for="prompt-output" class="form-label text-white mb-0">High-Fidelity Prompt</label>
+                    <label for="prompt-output" class="form-label text-white mb-0">High-Fidelity Prompt Blueprint</label>
                     <button id="copy-btn" class="btn btn-sm btn-light" data-bs-toggle="tooltip" data-bs-placement="top" title="Copy to clipboard">
                         <i class="bi bi-clipboard"></i> Copy
                     </button>

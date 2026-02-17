@@ -144,25 +144,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function generatePrompt(data) {
         if (typeof generatePromptText === 'function') {
-            // Prioritize Active Tab Data for the prompt engine
+            // Prioritize Active Tab Data for the prompt engine (Mutual Exclusivity)
             const activeTabId = document.querySelector('#aestheticTab .nav-link.active').id;
             
-            // If Festive Tab is NOT active, ignore festive_info
-            if (activeTabId !== 'festive-tab') {
+            if (activeTabId === 'festive-tab') {
+                // Anchor 1: Festive Special
+                data.dress_reference = ''; // Force hide URL from engine
+                data.festive_mode = 'on';
+            } else if (activeTabId === 'url-tab') {
+                // Anchor 2: Artisan Spotlight
+                data.festive_info = ''; // Force hide Festival from engine
+                data.festive_mode = '';
+            } else {
+                // Anchor 3: AI Full Auto
                 data.festive_info = '';
                 data.festive_mode = '';
-            }
-            // If URL Tab is NOT active, ignore dress_reference
-            if (activeTabId !== 'url-tab') {
                 data.dress_reference = '';
             }
-            // If Content Tab is NOT active, ignore hook/event (unless needed as fallback? 
-            // Actually, we'll let the engine handle fallbacks, but we clear inputs from inactive tabs)
-            if (activeTabId !== 'content-tab') {
-                // If we are in festive or URL mode, we might still want the hook/offer if provided?
-                // The hierarchy is Festive > URL > Content. 
-                // To keep it simple: we only send what's in the active tab.
-            }
+
+            // Marketing Content (data.hook, data.event_offer) are persistent and always sent.
 
             outputArea.value = generatePromptText(data);
         } else {
