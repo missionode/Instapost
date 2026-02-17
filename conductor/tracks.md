@@ -5,7 +5,7 @@ This file tracks all major tracks for the project. Each track has its own detail
 ---
 
 - [x] **Track: Fix wardrobe override risk (Superseded by Simplified Contextual Engine)**
-*Link: [./archive/wardrobe_lock_20260217/](./archive/wardrobe_lock_20260217/)*
+*Link: [./archive/wardrobe_lock_20260215/](./archive/wardrobe_lock_20260215/)*
 
 ---
 
