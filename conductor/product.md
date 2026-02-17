@@ -2,13 +2,13 @@
 The project is "Instapost", a context-aware tool to generate high-fidelity luxury Instagram posters using a dynamic semantic blueprint system.
 
 Key Features:
-- **Surgical Single-Point Entry UI:** Eliminates constraint collision by forcing a single design path (Festive, Artisan, or AI's Choice).
-- **Artisan Collection Builder:** A dynamic row-based interface for Artisan mode that allows users to explicitly pair garment URLs with specific model categories (Men, Women, Kids) for surgical precision.
+- **Modern Flat Design UI:** A minimalist, high-contrast interface optimized for mobile-first workflows, using 100% sans-serif typography (Inter).
+- **Surgical Single-Point Entry:** Eliminates constraint collision by forcing a single design path (Festive, Artisan, or AI's Choice).
+- **Horizontal Action Bars:** Strategic placement of engine toggles (AI Copy, Logo) for better accessibility and reachability on mobile devices.
+- **Artisan Collection Builder:** A dynamic row-based interface for Artisan mode that allows users to explicitly pair garment URLs with specific model categories.
 - **Advanced Contextual Engine:**
-    - **Multi-Subject Composition:** Intelligent handling of multiple models with category-specific attire directives.
-    - **Group Mode:** Automatic grid expansion to full-width when multiple subjects or references are detected.
+    - **Semantic Blueprinting:** Generates descriptive "Design Blueprints" for production-grade AI.
     - **Artisan Fidelity (9.5+ Score):** Advanced micro-level embroidery protection and mannequin suppression.
-    - **Regional Context Integration:** Subtly aligns model features and regional styling with the specific South Asian Indian cultural background of the provided location (City, State).
-- **Persistent Marketing Content:** Hooks and offers remain visible and integrated across all design paths.
+    - **Regional Context Integration:** Subtly aligns model features and regional styling with the South Asian Indian background of the provided location.
 - Prompt Generation: Outputs complex, structured JSON blueprints optimized for high-end diffusion models.
 - Persistence & Portability: `localStorage` integration with JSON export/import for database management.
