@@ -35,7 +35,7 @@ function isGroupMode(data) {
     const artisanCount = data.artisan_collection ? data.artisan_collection.length : 0;
     
     // 3. Fallback to comma detection if structured data is missing
-    const hasMultipleUrls = data.dress_reference && data.dress_reference.includes(',');
+    const hasMultipleUrls = !!(data.dress_reference && data.dress_reference.includes(','));
     
     return festiveCount > 1 || artisanCount > 1 || hasMultipleUrls;
 }
@@ -207,6 +207,18 @@ function generatePromptText(data) {
         }
     }
 
+    // Logo Logic
+    let logoInstruction = "";
+    if (data.enable_logo === 'on' && (data.logo_light || data.logo_dark)) {
+        logoInstruction = `\n  "LOGO_INTEGRATION": {
+    "is_logo_mandatory": true,
+    "light_version": "${data.logo_light || 'None provided'}",
+    "dark_version": "${data.logo_dark || 'None provided'}",
+    "usage_rule": "Select the version with maximum contrast against the generated background (Light for Dark/Rich, Dark for Light/Airy).",
+    "rendering_instruction": "Maintain absolute aspect ratio. Ensure clear negative space around the logo for visibility."
+  },`;
+    }
+
     // Capitalization handling
     const brandName = toTitleCase(data.brand || 'Brand Name');
     const hookText = data.ai_content_mode === 'on' ? 'GENERATE_AI_HOOK' : (data.hook || 'Headline').toUpperCase();
@@ -214,7 +226,7 @@ function generatePromptText(data) {
 
     return `Create a high-fidelity image based on the JSON-BASED DESIGN SPECIFICATION:
 {
-  "creative_type": "${data.creative_type || 'Social Media Post'}",${globalPriorityBlock}${wardrobeLockBlock}
+  "creative_type": "${data.creative_type || 'Social Media Post'}",${globalPriorityBlock}${wardrobeLockBlock}${logoInstruction}
   "dimensions": "${dim.size}",
   "aspect_ratio_constraint": "Strictly maintain aspect ratio without cropping",
   "composition_grid": {
