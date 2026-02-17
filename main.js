@@ -140,15 +140,14 @@ document.addEventListener('DOMContentLoaded', () => {
             
             generatePrompt(data);
 
-            // Artisan Reset UX: Clear subjects after generating in Artisan mode
+            // Artisan Reset UX: Clear subjects ONLY if we generated in Artisan mode
+            // Festive mode keeps them remembered for repeated seasonal posts.
             const activeAnchor = document.querySelector('input[name="anchor_mode"]:checked');
             if (activeAnchor && activeAnchor.value === 'artisan') {
+                const categories = ['subject_men', 'subject_women', 'subject_kids'];
                 categories.forEach(cat => {
                     document.getElementById(cat).checked = false;
                 });
-                // Note: We keep "Women" as a safe default if everything is unchecked? 
-                // Actually, the user asked to reset for more control. 
-                // I will reset all to false.
             }
         } else {
             form.reportValidity();
