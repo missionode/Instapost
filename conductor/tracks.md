@@ -31,4 +31,8 @@ This file tracks all major tracks for the project. Each track has its own detail
 
 - [x] **Track: Implement modern Flat Design and Mobile UX polish**
 *Link: [./archive/flat_design_mobile_ux_20260217/](./archive/flat_design_mobile_ux_20260217/)*
-\n---\n\n- [ ] **Track: Overhaul output format selector into visual tile system**\n*Link: [./tracks/format_selector_ui_polish_20260217/](./tracks/format_selector_ui_polish_20260217/)*
+
+---
+
+- [x] **Track: Overhaul output format selector into visual tile system**
+*Link: [./tracks/format_selector_ui_polish_20260217/](./tracks/format_selector_ui_polish_20260217/)*
